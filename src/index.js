@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+import * as serviceWorker from './serviceWorker';
 import Home from './js/router/Home';
 import Login from './js/router/Login';
 import WordRecords from './js/router/WordRecords';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import SignUp from './js/router/SignUp';
 
 import './css/index.css';
-import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<Router>
     <div>
         <Route exact path="/" component={Home}></Route>
         <Route path='/login' component={Login}></Route>
         <Route path='/WordRecords' component={WordRecords}></Route>
+        <Route path='/signup' component={SignUp}></Route>
     </div>
 </Router>, document.getElementById('root'));
 

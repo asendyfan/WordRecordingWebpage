@@ -19,7 +19,7 @@ export default class Login extends React.Component {
             event.preventDefault()
             $.ajax({
                 type:'POST',
-                url: '/user/signin',
+                url: '/user/signup',
                 async: false,
                 data: data
             }).then(data => {
@@ -35,7 +35,7 @@ export default class Login extends React.Component {
     render() {
         return <div style={{ marginTop: '16vh' }}>
             <form id="sign-form" className="border border-dark rounded mx-auto px-2 py-4" action="" >
-                <div className='text-center'><h3>Login</h3></div>
+                <div className='text-center'><h3>Sign Up</h3></div>
                 <div className="form-group">
                     <label for="validationDefault01">Name</label>
                     <input type="text" class="form-control" id="validationDefault01" placeholder="Name" name="user" required />

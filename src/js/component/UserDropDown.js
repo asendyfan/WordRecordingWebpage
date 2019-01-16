@@ -8,8 +8,9 @@ export default class MyNavbars extends React.Component{
                     <i className="fas fa-user"></i> User
                 </a>
                 <div className="dropdown-menu dropdown-menu-right">
-                    <button className="dropdown-item" href="#" type="button"><i className="fas fa-pencil-alt"></i>  Edit</button>
-                    <button className="dropdown-item" href="#" type="button"><i className="fas fa-sign-in-alt"></i>  log in</button>
+                    <button className="dropdown-item" href="/#" type="button"><Link to='/user/signin'><i className="fas fa-pencil-alt"></i>  Edit</Link></button>
+                    <button className="dropdown-item" href="#" type="button"><Link to='/user/signin'><i className="fas fa-sign-in-alt"></i>  Sign in</Link></button>
+                    <button className="dropdown-item" href="#" type="button"><Link to='/user/signup'><i className="fas fa-user-plus"></i>  Sign up</Link></button>
                     {/* <button className="dropdown-item" href="#" type="button"><i className="fas fa-sign-out-alt"></i>  log out</button> */}
                 </div>
             </div>

@@ -1,0 +1,15 @@
+#sign-form{
+    width:100vw;
+    border: 0;
+}
+@media screen and (min-width:721px ){
+    #sign-form{
+        width: 20rem;
+    }
+}
+@media screen and (max-width:720px ){
+    #sign-form{
+        border: 0 !important;
+        /* padding-left: 0.6rem; */
+    }
+}
