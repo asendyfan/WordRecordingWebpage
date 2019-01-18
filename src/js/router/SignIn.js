@@ -3,7 +3,13 @@ import React from 'react';
 import $ from 'jquery';
 import '../../css/login.css';
 import md5 from 'md5';
-export default class Login extends React.Component {
+export default class SignIn extends React.Component {
+    constructor(props){
+        super(props)
+        this.state={
+            isAlert:false
+        }
+    }
 
     componentDidMount() {
         //  const form = document.getElementById('sign-form')
@@ -23,19 +29,30 @@ export default class Login extends React.Component {
                 async: false,
                 data: data
             }).then(data => {
-                console.log(data)
+                console.log('登陆成功',data)
                 this.props.history.push('/')
             }).catch(err => {
                 console.log(err)
+                this.setState({isAlert:true})
             })
         })
     }
 
+    alertComponent(alertSentence){
+        return <div className="alert alert-danger alert-dismissiblew" role="alert">
+            {alertSentence}
+            <button type="button" className="close" onClick={()=>this.setState({isAlert:false})} aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
 
     render() {
+        const {isAlert} = this.state
         return <div style={{ marginTop: '16vh' }}>
             <form id="sign-form" className="border border-dark rounded mx-auto px-2 py-4" action="" >
                 <div className='text-center'><h3>Login</h3></div>
+                {isAlert && this.alertComponent('用户名或者密码错误.')}
                 <div className="form-group">
                     <label for="validationDefault01">Name</label>
                     <input type="text" class="form-control" id="validationDefault01" placeholder="Name" name="user" required />

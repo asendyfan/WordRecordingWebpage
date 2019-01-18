@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import * as serviceWorker from './serviceWorker';
 import Home from './js/router/Home';
-import Login from './js/router/Login';
+import SignIn from './js/router/SignIn';
 import WordRecords from './js/router/WordRecords';
 import SignUp from './js/router/SignUp';
 
@@ -13,7 +13,7 @@ import './css/index.css';
 ReactDOM.render(<Router>
     <div>
         <Route exact path="/" component={Home}></Route>
-        <Route path='/login' component={Login}></Route>
+        <Route path='/signin' component={SignIn}></Route>
         <Route path='/WordRecords' component={WordRecords}></Route>
         <Route path='/signup' component={SignUp}></Route>
     </div>

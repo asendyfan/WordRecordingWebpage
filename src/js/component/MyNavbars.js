@@ -25,10 +25,6 @@ export default class MyNavbars extends React.Component{
                     </ul>
                     <div className=" my-2 my-lg-0 mr-5">
                         <UserDropDown className='nav-item'/>
-                        {/* <input className="form-control mr-sm-2" type="search" placeholder="Search" />
-                        <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search
-                        <span className="glyphicon glyphicon-user"></span>
-                        </button> */}
                     </div>
                 </div>
             </nav>
