@@ -5,7 +5,7 @@ import { Table, Button, Icon, Input } from 'antd';
 import "antd/dist/antd.css";
 import Highlighter from 'react-highlight-words';
 
-export default class Login extends React.Component {
+class WordTable extends React.Component {
 
     state = {
         searchText: '',
@@ -67,7 +67,6 @@ export default class Login extends React.Component {
         this.setState({ searchText: '' });
     }
 
-
     buildTable(){
         const column = [
             {
@@ -95,10 +94,7 @@ export default class Login extends React.Component {
                 dataIndex:'recordDays',
             },
         ]
-        // const keys = ['word', 'wordClass', 'translate', 'recordingTime', 'recordDays'];
-        // column.forEach((value, index)=>{
-        //     value.sorter = (a, b) => a[keys[index]] - b[keys[index]]
-        // })
+
         const values = WordRecordDemo.map(data=>{
             return {
                 word:data.word,
@@ -114,8 +110,18 @@ export default class Login extends React.Component {
     render(){
         return (
             <div>
-                <MyNavBars/>
                 {this.buildTable()}
+            </div>
+        )
+    }
+}
+
+export default class WordRecord extends React.Component{
+    render(){
+        return(
+            <div>
+                <MyNavBars/>
+                <WordTable/>
             </div>
         )
     }

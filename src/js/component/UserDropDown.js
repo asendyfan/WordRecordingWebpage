@@ -15,7 +15,6 @@ export default class MyNavbars extends React.Component{
         })
     }
     render(){
-        console.log('render')
         let userName = getCookie('user');
         userName = userName?userName:'User';
         console.log(userName)
@@ -25,7 +24,7 @@ export default class MyNavbars extends React.Component{
                     <i className="fas fa-user"></i> {userName}
                 </a>
                 <div className="dropdown-menu dropdown-menu-right">
-                    <button className="dropdown-item" href="/#" type="button"><Link to='/signin'><i className="fas fa-pencil-alt"></i>  Edit</Link></button>
+                    {userName==='admin' && <button className="dropdown-item" href="/#" type="button"><Link to='/setting'><i className="fas fa-pencil-alt"></i>  Edit</Link></button>}
                     {userName ==='User' && <button className="dropdown-item" href="#" type="button"><Link to='/signin'><i className="fas fa-sign-in-alt"></i>  登陆</Link></button>}
                     {userName ==='User' && <button className="dropdown-item" href="#" type="button"><Link to='/signup'><i className="fas fa-user-plus"></i>  注册</Link></button>}
                     {userName !=='User' && <button className="dropdown-item" href="#" type="button" onClick={()=>this.signOut()}><i className="fas fa-sign-in-alt"></i>  离开</button>}

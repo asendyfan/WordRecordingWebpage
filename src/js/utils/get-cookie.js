@@ -5,8 +5,8 @@ export
             leftSide = cookies.indexOf(name)
         if (leftSide === -1) return ''
         const deleteRightOthers = cookies.substring(leftSide),
-            rightSide = cookies.indexOf(';')
-        if (rightSide === -1) return ''
+            rightSide = deleteRightOthers.indexOf(';')
+        if (rightSide === -1) return deleteRightOthers
         const value = deleteRightOthers.substring(0, rightSide)
         return value.split('=')[1];
     }
