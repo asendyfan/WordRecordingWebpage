@@ -18,3 +18,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.hover-pointer:hover{
+  cursor: pointer;
+}
+
+@media screen and (min-width:721px ){
+  .page-max-width{
+      max-width: 80rem;
+  }
+}

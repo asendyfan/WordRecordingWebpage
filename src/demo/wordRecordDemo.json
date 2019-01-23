@@ -3,24 +3,32 @@
         "word":"verbose",
         "translate":"冗长的，啰嗦的",
         "wordClass":"adj.",
-        "recordingTime":"2018-12-25"
+        "recordingTime":"2018-12-25",
+        "type":"normal",
+        "starsNum":5
     },
     {
         "word":"consensus",
         "translate":"一致同意，舆论",
         "wordClass":"n.",
-        "recordingTime":"2019-01-02"
+        "recordingTime":"2019-01-02",
+        "type":"normal",
+        "starsNum":5
     },
     {
         "word":"infrasture",
         "translate":"基础设施",
         "wordClass":"n.",
-        "recordingTime":"2019-01-15"
+        "recordingTime":"2019-01-15",
+        "type":"normal",
+        "starsNum":4
     },
     {
         "word":"cellular",
         "translate":"细胞的，多孔的",
         "wordClass":"adj.",
-        "recordingTime":"2019-01-12"
+        "recordingTime":"2019-01-12",
+        "type":"material",
+        "starsNum":3
     }
 ]

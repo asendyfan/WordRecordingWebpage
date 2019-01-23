@@ -1,14 +1,24 @@
 import React from 'react';
-import MyNavBars from '../component/MyNavbars';
-import WordRecordDemo from '../../demo/wordRecordDemo'
+import MyNavBars from '../../component/MyNavbars';
+import WordRecordDemo from '../../../demo/wordRecordDemo'
 import { Table, Button, Icon, Input } from 'antd';
 import "antd/dist/antd.css";
+import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
+import TableFilter from './TableFilter';
+import eventProxy from '../../utils/event-proxy';
 
 class WordTable extends React.Component {
 
+    componentDidMount(){
+        eventProxy.on('wordsTypeChange', (wordsType)=>{
+            this.setState({wordsType})
+        })
+    }
+
     state = {
         searchText: '',
+        wordsType:'all'
     };
 
     getColumnSearchProps = (dataIndex) => ({
@@ -68,6 +78,7 @@ class WordTable extends React.Component {
     }
 
     buildTable(){
+        const {wordsType} = this.state
         const column = [
             {
                 title:'单词',
@@ -91,25 +102,40 @@ class WordTable extends React.Component {
             },
             {
                 title:'记录天数',
-                dataIndex:'recordDays',
+                dataIndex:'recordDays'
+            },
+            {
+                title:'重要性',
+                dataIndex:'starsNum',
+                render:(value, row, index)=>{
+                    let array = []
+                    for(let i=0;i<value;i++){
+                        array.push(<i className='fas fa-star' key={i+'star'}></i>)
+                    }
+                    console.log(value, array)
+                    return {children:<div>{array.map((value)=>{console.log('sss');return value})}</div>}
+                }
             },
         ]
 
-        const values = WordRecordDemo.map(data=>{
-            return {
-                word:data.word,
-                wordClass:data.wordClass,
-                translate:data.translate,
-                recordingTime:data.recordingTime,
-                recordDays:1
-            }
+        const values = WordRecordDemo
+            .filter(value=>wordsType==='all'?true:wordsType===value.type)
+            .map(data=>{
+                return {
+                    word:data.word,
+                    wordClass:data.wordClass,
+                    translate:data.translate,
+                    recordingTime:data.recordingTime,
+                    recordDays:1,
+                    starsNum:data.starsNum
+                }
         })
         return <Table columns={column} dataSource={values} />
     }
-    
+
     render(){
         return (
-            <div>
+            <div className='page-max-width'>
                 {this.buildTable()}
             </div>
         )
@@ -121,7 +147,10 @@ export default class WordRecord extends React.Component{
         return(
             <div>
                 <MyNavBars/>
-                <WordTable/>
+                <div className='page-max-width mx-lg-auto mx-3'>
+                    <TableFilter/>
+                    <WordTable/>
+                </div>
             </div>
         )
     }
