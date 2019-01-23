@@ -25,7 +25,7 @@ export default class SignIn extends React.Component {
             event.preventDefault()
             $.ajax({
                 type:'POST',
-                url: '/user/signin',
+                url: '/api/user/signin',
                 async: false,
                 data: data
             }).then(data => {

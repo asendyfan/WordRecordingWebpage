@@ -7,7 +7,7 @@ export default class MyNavbars extends React.Component{
     signOut(){
         $.ajax({
             type:'POST',
-            url:'/user/signout',
+            url:'/api/user/signout',
         }).then(()=>{
             console.log('success sign out')
             this.setState({userName:'User'})
