@@ -1,7 +1,9 @@
 import React from 'react';
+import $ from 'jquery';
+import _ from 'lodash';
 import MyNavBars from '../../component/MyNavbars';
 import WordRecordDemo from '../../../demo/wordRecordDemo'
-import { Table, Button, Icon, Input } from 'antd';
+import { Table, Button, Icon, Input, Rate } from 'antd';
 import "antd/dist/antd.css";
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
@@ -18,7 +20,8 @@ class WordTable extends React.Component {
 
     state = {
         searchText: '',
-        wordsType:'all'
+        wordsType:'所有',
+        words:[]
     };
 
     getColumnSearchProps = (dataIndex) => ({
@@ -78,78 +81,146 @@ class WordTable extends React.Component {
     }
 
     buildTable(){
-        const {wordsType} = this.state
+        const {wordsType, words} = this.state
+        console.log(words)
         const column = [
             {
-                title:'单词',
-                dataIndex:'word',
-                sorter:(a,b)=>a.word > b.word?1:-1,
-                defaultSortOrder:'ascend',
-                ...this.getColumnSearchProps('word'),
-            },
-            {
-                title:'词性',
-                dataIndex:'wordClass',
-            },
-            {
-                title:'翻译',
-                dataIndex:'translate',
-            },
-            {
-                title:'记录时间',
+                title:'记录日期',
                 dataIndex:'recordingTime',
                 sorter:(a, b)=>a.recordingTime > b.recordingTime?1:-1,
+                defaultSortOrder:'descend',
+                align:'center',
             },
             {
-                title:'记录天数',
-                dataIndex:'recordDays'
+                title:'熟练度',
+                dataIndex: 'starsNum',
+                render: (value, row, index) => <Rate allowHalf disabled value={value} />,
+                sorter: (a, b) => a > b ? 1 : -1,
+                filters: [
+                    {
+                        text: '1星',
+                        value: 1
+                    },
+                    {
+                        text: '2星',
+                        value: 2
+                    },
+                    {
+                        text: '3星',
+                        value: 3
+                    },
+                    {
+                        text: '4星',
+                        value: 4
+                    },
+                    {
+                        text: '5星',
+                        value: 5
+                    },
+                ],
+                onFilter: (value, record) => record.starsNum == value,
+                align: 'center',
             },
             {
-                title:'重要性',
-                dataIndex:'starsNum',
-                render:(value, row, index)=>{
-                    let array = []
-                    for(let i=0;i<value;i++){
-                        array.push(<i className='fas fa-star' key={i+'star'}></i>)
-                    }
-                    console.log(value, array)
-                    return {children:<div>{array.map((value)=>{console.log('sss');return value})}</div>}
-                }
+                title: '单词',
+                dataIndex: 'word',
+                sorter: (a, b) => a.word > b.word ? 1 : -1,
+                ...this.getColumnSearchProps('word'),
+                align: 'center',
+            },
+            {
+                title:'发音',
+                dataIndex:'phonetic',
+                align:'center'
+            },
+            {
+                title: '词性',
+                dataIndex: 'wordClass',
+                filters: [{
+                    text: 'n.',
+                    value: 'n.'
+                }, {
+                    text: 'v.',
+                    value: 'v.'
+                }, {
+                    text: 'adj.',
+                    value: 'adj.'
+                }, {
+                    text: 'adv.',
+                    value: 'adv.'
+                }],
+                onFilter: (value, record) => record.wordClass == value,
+                align: 'center',
+            },
+            {
+                title: '翻译',
+                dataIndex: 'translate',
+                align: 'center',
+            },
+            {
+                title: '记录天数',
+                dataIndex: 'recordDays',
+                align: 'center',
             },
         ]
 
-        const values = WordRecordDemo
-            .filter(value=>wordsType==='all'?true:wordsType===value.type)
-            .map(data=>{
+        const values = words
+            .filter(data => wordsType === '所有' ? true : data.classifications.includes(wordsType))
+            .map(data => {
                 return {
-                    word:data.word,
-                    wordClass:data.wordClass,
-                    translate:data.translate,
-                    recordingTime:data.recordingTime,
-                    recordDays:1,
-                    starsNum:data.starsNum
+                    word: data.word,
+                    phonetic:data.phonetic,
+                    wordClass: data.wordClass,
+                    translate: data.translate,
+                    recordingTime: data.recordingTime,
+                    recordDays: Math.ceil((Date.now() - new Date(data.recordingTime).getTime())/(1000*60*60*24)),
+                    starsNum: data.starsNum
                 }
-        })
-        return <Table columns={column} dataSource={values} />
+            })
+        return <Table columns={column} dataSource={values} bordered />
     }
 
-    render(){
+    render() {
         return (
             <div className='page-max-width'>
                 {this.buildTable()}
             </div>
         )
     }
+
+    componentDidUpdate(){
+        const {words} = this.props
+        if(this.state.words.length===0 & words.length!==0){
+            const nowWords = _.cloneDeep(words)
+            this.setState({words:nowWords});
+        }
+    }
 }
 
-export default class WordRecord extends React.Component{
-    render(){
-        return(
+export default class WordRecord extends React.Component {
+
+    state={
+        words:[]
+    }
+
+    componentWillMount(){
+        $.ajax({
+            url:'/api/wordRecords/getwords'            
+        }).then(data=>{
+            this.setState({words:data})
+        }).catch(err=>console.error(err))
+    }
+
+
+    render() {
+        const {words} = this.state;
+        console.log('word record',words)
+        return (
             <div>
-                <MyNavBars/>
+                <MyNavBars />
                 <div className='page-max-width mx-lg-auto mx-3'>
-                    <TableFilter/>
-                    <WordTable/>
+                    <TableFilter />
+                    <WordTable  words={words}/>
                 </div>
             </div>
         )
