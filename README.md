@@ -13,6 +13,7 @@
     1. 获得当前时间毫秒数：`Date.now()`
     1. 获得指定时间的毫秒数：`new Date(date).getTime()` 
     1. 获得本地的日期：`dateObj.toLocaleDateString() //2019-1-27`
+    1. 日期格式设置：`new Date().toLocaleDateString('nu-arab',{'timeZone':'Asia/Shanghai','year':'numeric','month':'2-digit','day':'2-digit'}) //2019/01/29`
     1. 获得本地的时间：`dateObj.toLocaleTimeString('en-US', { hour12: false }) //22:03:05`
 - 技巧上
     1. 遍历同时删掉原数组的某些值的方法：

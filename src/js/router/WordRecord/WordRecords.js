@@ -3,12 +3,48 @@ import $ from 'jquery';
 import _ from 'lodash';
 import MyNavBars from '../../component/MyNavbars';
 import WordRecordDemo from '../../../demo/wordRecordDemo'
-import { Table, Button, Icon, Input, Rate } from 'antd';
+import { Table, Button, Icon, Input, Rate, DatePicker } from 'antd';
 import "antd/dist/antd.css";
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
 import TableFilter from './TableFilter';
 import eventProxy from '../../utils/event-proxy';
+
+
+// class DatePickerWrapper extends React.Component{
+//     constructor(props){
+//         super(props);
+//         this.state={
+//             needOpen:false,
+//             dates:[]
+//         }
+//         this.DateFormat = 'YYYY/MM/DD'
+//         this.handleDateChange = this.handleDateChange.bind(this)
+//     }
+//     handleNeedOpen(){
+//         this.setState({needOpen:true})
+//     }
+//     handleNeedClose(){
+//         this.setState({needOpen:false})
+//     }
+//     handleDateChange(dates, dateStrings){
+//         this.setState(dates)
+//     }
+//     clearButtonComponents = ()=> (<div style={{width:'500px'}}>
+//         <button className='btn btn-link float-right border-0' onClick={()=>this.handleNeedClose()}>ok</button>
+//         <button className='btn btn-link float-right border-0' onClick={()=>this.handleDateChange([])}>clear</button>
+//     </div>)
+//     render(){
+//         const {dates} = this.state;
+//         const valueProp = dates.length?{value:dates}:{}
+//         return <DatePicker.RangePicker
+//             onChange={this.handleDateChange} 
+//             {...valueProp}
+//             open={this.state.needOpen} 
+//             {...this.props}
+//             renderExtraFooter={()=>this.clearButtonComponents()}/>
+//     }
+// }
 
 class WordTable extends React.Component {
 
@@ -21,7 +57,8 @@ class WordTable extends React.Component {
     state = {
         searchText: '',
         wordsType:'所有',
-        words:[]
+        words:[],
+        isTotalVisible:true
     };
 
     getColumnSearchProps = (dataIndex) => ({
@@ -69,6 +106,37 @@ class WordTable extends React.Component {
             />
         ),
     }) 
+
+
+    getColumnDatePickerProps = (dataIndex)=>({
+        filterDropdown:({
+            setSelectedKeys,selectedKeys, confirm, clearFilters,
+        }) => (
+            <div>
+                    <DatePicker.RangePicker 
+                        ref={(node)=>this.RangePicker = node}
+                        onChange={(dates, dateStrings) => {setSelectedKeys([dateStrings]);this.dateStrings = dateStrings}}/>
+                    <Button className='ml-2' onClick={()=>{
+                        this.dateStrings[0] ? confirm():clearFilters()
+                    }}>ok</Button>
+            </div>
+        ),
+        filterIcon:filtered => <Icon type="calendar" />,
+        onFilter:(value, record)=> {
+            console.log('date filter',value, record[dataIndex])
+            console.log(new Date(value[0]).getTime(), record[dataIndex], new Date(value[1]).getTime())
+            const dataDate = new Date(record[dataIndex])
+                .toLocaleDateString('nu-arab',{'timeZone':'Asia/Shanghai','year':'numeric','month':'2-digit','day':'2-digit'})
+                .replace(/\//g,'-')
+            // return ((value[0].replace(/\-/g,'/')  <= record[dataIndex]) && record[dataIndex] <= (value[1].replace(/\-/g, '/')))
+            return value[0] <= dataDate && dataDate <=value[1]
+        },
+        onFilterDropdownVisibleChange:(visible)=>{
+            if(visible){
+                this.RangePicker.focus()
+            }
+        } 
+    })
     
     handleSearch = (selectedKeys, confirm) => {
         confirm();
@@ -80,16 +148,27 @@ class WordTable extends React.Component {
         this.setState({ searchText: '' });
     }
 
+    handleTranslateColumnVisible(e){
+        console.log(e)
+        const {isTotalVisible} = this.state
+        const changeVisible = isTotalVisible?false:true
+        this.setState({isTotalVisible:changeVisible});
+    }
+
     buildTable(){
-        const {wordsType, words} = this.state
-        console.log(words)
+        const {wordsType, words, isTotalVisible} = this.state
+        // console.log(words)
         const column = [
             {
                 title:'记录日期',
                 dataIndex:'recordingTime',
                 sorter:(a, b)=>a.recordingTime > b.recordingTime?1:-1,
                 defaultSortOrder:'descend',
+                ...this.getColumnDatePickerProps('recordingTime'),
                 align:'center',
+                render:(text)=>{
+                    return new Date(text).toLocaleDateString('nu-arab',{'timeZone':'Asia/Shanghai','year':'2-digit','month':'2-digit','day':'2-digit'})
+                }
             },
             {
                 title:'熟练度',
@@ -124,7 +203,7 @@ class WordTable extends React.Component {
             {
                 title: '单词',
                 dataIndex: 'word',
-                sorter: (a, b) => a.word > b.word ? 1 : -1,
+                sorter: (a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1,
                 ...this.getColumnSearchProps('word'),
                 align: 'center',
             },
@@ -153,9 +232,10 @@ class WordTable extends React.Component {
                 align: 'center',
             },
             {
-                title: '翻译',
+                title: ()=><div>翻译<Icon type={isTotalVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
                 dataIndex: 'translate',
                 align: 'center',
+                render:(text)=>isTotalVisible?text:'*****'
             },
             {
                 title: '记录天数',
@@ -173,7 +253,7 @@ class WordTable extends React.Component {
                     wordClass: data.wordClass,
                     translate: data.translate,
                     recordingTime: data.recordingTime,
-                    recordDays: Math.ceil((Date.now() - new Date(data.recordingTime).getTime())/(1000*60*60*24)),
+                    recordDays: Math.ceil((Date.now() - data.recordingTime)/(1000*60*60*24)),
                     starsNum: data.starsNum
                 }
             })
