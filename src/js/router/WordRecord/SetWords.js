@@ -79,6 +79,7 @@ class AddWord extends React.Component{
         phonetic:'',
         classifications:[]
     }
+    thisWordClassifications=[]
     getClassifications = async function(){
         let data = await $.ajax({
             method:'GET',

@@ -123,8 +123,6 @@ class WordTable extends React.Component {
         ),
         filterIcon:filtered => <Icon type="calendar" />,
         onFilter:(value, record)=> {
-            console.log('date filter',value, record[dataIndex])
-            console.log(new Date(value[0]).getTime(), record[dataIndex], new Date(value[1]).getTime())
             const dataDate = new Date(record[dataIndex])
                 .toLocaleDateString('nu-arab',{'timeZone':'Asia/Shanghai','year':'numeric','month':'2-digit','day':'2-digit'})
                 .replace(/\//g,'-')
@@ -149,7 +147,6 @@ class WordTable extends React.Component {
     }
 
     handleTranslateColumnVisible(e){
-        console.log(e)
         const {isTotalVisible} = this.state
         const changeVisible = isTotalVisible?false:true
         this.setState({isTotalVisible:changeVisible});
@@ -157,7 +154,6 @@ class WordTable extends React.Component {
 
     buildTable(){
         const {wordsType, words, isTotalVisible} = this.state
-        // console.log(words)
         const column = [
             {
                 title:'记录日期',
@@ -294,7 +290,6 @@ export default class WordRecord extends React.Component {
 
     render() {
         const {words} = this.state;
-        console.log('word record',words)
         return (
             <div>
                 <MyNavBars />
