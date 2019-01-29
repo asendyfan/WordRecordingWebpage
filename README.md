@@ -14,6 +14,17 @@
     1. 获得指定时间的毫秒数：`new Date(date).getTime()` 
     1. 获得本地的日期：`dateObj.toLocaleDateString() //2019-1-27`
     1. 获得本地的时间：`dateObj.toLocaleTimeString('en-US', { hour12: false }) //22:03:05`
+- 技巧上
+    1. 遍历同时删掉原数组的某些值的方法：
+        ```
+        for(let i=0;i<arrayLength;i++){
+            if(condition){
+                array.splice(i,1)
+                i--
+            }
+        }
+        ```
+    
 
 ### 标签上 ###
 1. select标签中改变option时，可以通过添加onchange事件监听，option值为e.target.value
