@@ -157,6 +157,13 @@ class WordTable extends React.Component {
         const {wordsType, words, isTotalVisible} = this.state
         const column = [
             {
+                title: '单词',
+                dataIndex: 'word',
+                sorter: (a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1,
+                ...this.getColumnSearchProps('word'),
+                align: 'center',
+            },
+            {
                 title:'记录日期',
                 dataIndex:'recordingTime',
                 sorter:(a, b)=>a.recordingTime > b.recordingTime?1:-1,
@@ -195,13 +202,6 @@ class WordTable extends React.Component {
                     },
                 ],
                 onFilter: (value, record) => record.starsNum == value,
-                align: 'center',
-            },
-            {
-                title: '单词',
-                dataIndex: 'word',
-                sorter: (a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1,
-                ...this.getColumnSearchProps('word'),
                 align: 'center',
             },
             {
@@ -250,7 +250,7 @@ class WordTable extends React.Component {
                     wordClass: data.wordClass,
                     translate: data.translate,
                     recordingTime: data.recordingTime,
-                    recordDays: Math.ceil((Date.now() - Number(data.recordingTime))/(1000*60*60*24)),
+                    recordDays: Math.ceil(( new Date(new Date().toLocaleDateString()).getTime() - new Date(new Date(data.recordingTime).toLocaleDateString()).getTime()  )/(1000*60*60*24) + 1 ),
                     starsNum: data.starsNum
                 }
             })
@@ -296,7 +296,7 @@ export default class WordRecord extends React.Component {
                 <SideMenu/>
                 <Layout>
                     <MyNavBars/>
-                    <div className='page-max-width mx-lg-auto mx-3'>
+                    <div className='page-max-width mx-xl-5 mx-md-3 mx-1'>
                         <TableFilter />
                         <WordTable  words={words}/>
                     </div>
