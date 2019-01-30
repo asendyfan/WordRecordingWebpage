@@ -22,6 +22,20 @@ code {
 .hover-pointer:hover{
   cursor: pointer;
 }
+.side-collapse-style:hover{
+  background-color: '#0066ff';
+}
+
+.icon-2-larger{
+  font-size: 2rem;
+}
+
+.icon-half-larger{
+  font-size:1.5rem;
+}
+.route-min-height{
+  min-height: 100vh;
+}
 
 @media screen and (min-width:721px ){
   .page-max-width{

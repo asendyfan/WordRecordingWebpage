@@ -3,12 +3,13 @@ import $ from 'jquery';
 import _ from 'lodash';
 import MyNavBars from '../../component/MyNavbars';
 import WordRecordDemo from '../../../demo/wordRecordDemo'
-import { Table, Button, Icon, Input, Rate, DatePicker } from 'antd';
+import { Table, Button, Icon, Input, Rate, DatePicker, Layout } from 'antd';
 import "antd/dist/antd.css";
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
 import TableFilter from './TableFilter';
 import eventProxy from '../../utils/event-proxy';
+import SideMenu from './SideMenu';
 
 
 // class DatePickerWrapper extends React.Component{
@@ -117,7 +118,7 @@ class WordTable extends React.Component {
                         ref={(node)=>this.RangePicker = node}
                         onChange={(dates, dateStrings) => {setSelectedKeys([dateStrings]);this.dateStrings = dateStrings}}/>
                     <Button className='ml-2' onClick={()=>{
-                        this.dateStrings[0] ? confirm():clearFilters()
+                        this.dateStrings && this.dateStrings[0] ? confirm():clearFilters()
                     }}>ok</Button>
             </div>
         ),
@@ -249,7 +250,7 @@ class WordTable extends React.Component {
                     wordClass: data.wordClass,
                     translate: data.translate,
                     recordingTime: data.recordingTime,
-                    recordDays: Math.ceil((Date.now() - data.recordingTime)/(1000*60*60*24)),
+                    recordDays: Math.ceil((Date.now() - Number(data.recordingTime))/(1000*60*60*24)),
                     starsNum: data.starsNum
                 }
             })
@@ -291,13 +292,16 @@ export default class WordRecord extends React.Component {
     render() {
         const {words} = this.state;
         return (
-            <div>
-                <MyNavBars />
-                <div className='page-max-width mx-lg-auto mx-3'>
-                    <TableFilter />
-                    <WordTable  words={words}/>
-                </div>
-            </div>
+            <Layout className='route-min-height'>
+                <SideMenu/>
+                <Layout>
+                    <MyNavBars/>
+                    <div className='page-max-width mx-lg-auto mx-3'>
+                        <TableFilter />
+                        <WordTable  words={words}/>
+                    </div>
+                </Layout>
+            </Layout>
         )
     }
 }

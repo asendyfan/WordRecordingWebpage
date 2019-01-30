@@ -1,8 +1,10 @@
 import React from 'react';
 import $ from 'jquery';
-
+import {Layout} from 'antd';
 import MyNavBars from '../component/MyNavbars'
 import {getCookie} from '../utils/get-cookie';
+
+
 
 export default class Login extends React.Component{
     constructor(props){
@@ -25,8 +27,8 @@ export default class Login extends React.Component{
     }
     render(){
         const {userName} = this.state
-        return <div>
+        return <Layout className='route-min-height'>
             <MyNavBars/>
-        </div>
+        </Layout>
     }
 }

@@ -11,7 +11,6 @@ import SignUp from './js/router/SignUp';
 import Forbidden from './js/router/Forbidden';
 import Setting from './js/router/Setting';
 
-import {getCookie} from './js/utils/get-cookie';
 
 import './css/index.css';
 
