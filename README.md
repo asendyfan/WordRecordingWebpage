@@ -42,3 +42,6 @@
     - 通过父元素为block布局添加，但是要确定子元素的具体宽度，添加类名mx-auto 
 1. 某标签不占用当行的位置，将该标签添加类名：float-xx-left或者float-xx-right, 其兄弟元素要表现为block，添加类名d-block
 1. input以及button通过样式名`d-inline-block`放在一行时，给input添加`.form-control`可以保持行高的一致
+1. 多个控件在一行，只指定某一个控件在中间的实现方式：
+    + 父容器设定为相对定位，居中的控件包一个绝对定位，并设置`top:0px;z-index:100`，其他组件放后面
+

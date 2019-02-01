@@ -29,8 +29,8 @@ class SideMenu extends React.Component{
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
         const sideContents = this.props
         return (
-            <div onMouseOver={this.onpenSideMenu} style={{width:!collapsed?'200px':'80px'}}>
-                <Affix offsetTop={0}>
+            <div onMouseOver={this.onpenSideMenu} >
+                <Affix offsetTop={0}  style={{width:!collapsed?'200px':'80px'}}>
                     <Sider
                         collapsed={collapsed}
                         onCollapse={this.onCollapse}
@@ -69,7 +69,7 @@ class SideMenu extends React.Component{
                                     translateResult.word = searchWord.trim()
                                     translateResult && this.setState({translateResult})
                                 }}>翻译</Button>}
-                            <div className={`${Object.keys(translateResult).length?'visible':'invisible'} text-white`}>    
+                            <div className={`${!collapsed && Object.keys(translateResult).length?'visible':'invisible'} text-white`}>    
                                 <OnlineTranslation translateResult={translateResult}/>
                             </div>
                             

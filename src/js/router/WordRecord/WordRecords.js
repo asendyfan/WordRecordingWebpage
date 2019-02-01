@@ -2,50 +2,13 @@ import React from 'react';
 import $ from 'jquery';
 import _ from 'lodash';
 import MyNavBars from '../../component/MyNavbars';
-import WordRecordDemo from '../../../demo/wordRecordDemo'
-import { Table, Button, Icon, Input, Rate, DatePicker, Layout } from 'antd';
+import { Table, Button, Icon, Input, Rate, DatePicker, Layout, Popconfirm, message, Modal, Spin } from 'antd';
 import "antd/dist/antd.css";
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
 import TableFilter from './TableFilter';
 import eventProxy from '../../utils/event-proxy';
 import SideMenu from './SideMenu';
-
-
-// class DatePickerWrapper extends React.Component{
-//     constructor(props){
-//         super(props);
-//         this.state={
-//             needOpen:false,
-//             dates:[]
-//         }
-//         this.DateFormat = 'YYYY/MM/DD'
-//         this.handleDateChange = this.handleDateChange.bind(this)
-//     }
-//     handleNeedOpen(){
-//         this.setState({needOpen:true})
-//     }
-//     handleNeedClose(){
-//         this.setState({needOpen:false})
-//     }
-//     handleDateChange(dates, dateStrings){
-//         this.setState(dates)
-//     }
-//     clearButtonComponents = ()=> (<div style={{width:'500px'}}>
-//         <button className='btn btn-link float-right border-0' onClick={()=>this.handleNeedClose()}>ok</button>
-//         <button className='btn btn-link float-right border-0' onClick={()=>this.handleDateChange([])}>clear</button>
-//     </div>)
-//     render(){
-//         const {dates} = this.state;
-//         const valueProp = dates.length?{value:dates}:{}
-//         return <DatePicker.RangePicker
-//             onChange={this.handleDateChange} 
-//             {...valueProp}
-//             open={this.state.needOpen} 
-//             {...this.props}
-//             renderExtraFooter={()=>this.clearButtonComponents()}/>
-//     }
-// }
 
 class WordTable extends React.Component {
 
@@ -57,10 +20,12 @@ class WordTable extends React.Component {
 
     state = {
         searchText: '',
-        wordsType:'所有',
+        wordsType:'所有单词',
         words:[],
-        isTotalVisible:true
+        isTotalVisible:true,
+        selectedRowKeys:[]
     };
+    needDeleteWord=[]
 
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
@@ -153,8 +118,22 @@ class WordTable extends React.Component {
         this.setState({isTotalVisible:changeVisible});
     }
 
+    rowSelection={
+        onChange:(selectedRowKeys, selectedRows) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys instanceof Array}`, 'selectedRows: ', selectedRows);
+            this.setState({selectedRowKeys})
+            this.needDeleteWord = selectedRows.length ?selectedRows.map(value=>value.word):[]
+        }
+    }
+
+    clearSelect=()=>{
+        this.setState({selectedRowKeys:[]})
+    }
+
     buildTable(){
-        const {wordsType, words, isTotalVisible} = this.state
+        const {wordsType, isTotalVisible, selectedRowKeys} = this.state
+        this.rowSelection.selectedRowKeys = selectedRowKeys
+        const {words} = this.props
         const column = [
             {
                 title: '单词',
@@ -242,7 +221,7 @@ class WordTable extends React.Component {
         ]
 
         const values = words
-            .filter(data => wordsType === '所有' ? true : data.classifications.includes(wordsType))
+            .filter(data => wordsType === '所有单词' ? true : data.classifications.includes(wordsType))
             .map(data => {
                 return {
                     word: data.word,
@@ -254,7 +233,7 @@ class WordTable extends React.Component {
                     starsNum: data.starsNum
                 }
             })
-        return <Table columns={column} dataSource={values} bordered />
+        return <Table rowSelection={this.rowSelection} columns={column} dataSource={values} bordered />
     }
 
     render() {
@@ -266,11 +245,11 @@ class WordTable extends React.Component {
     }
 
     componentDidUpdate(){
-        const {words} = this.props
-        if(this.state.words.length===0 & words.length!==0){
-            const nowWords = _.cloneDeep(words)
-            this.setState({words:nowWords});
-        }
+        // const {words} = this.props
+        // if(this.state.words.length===0 && words.length!==0){
+        //     const nowWords = _.cloneDeep(words)
+        //     this.setState({words:nowWords});
+        // }
     }
 }
 
@@ -288,6 +267,47 @@ export default class WordRecord extends React.Component {
         }).catch(err=>console.error(err))
     }
 
+    // ModalMessage(){
+    //     Modal.
+    // }
+
+    deleteWord= async ()=>{
+        const that = this
+        if(!this.WordTableElement.needDeleteWord.length)return message.info('请先选择')
+        const deleteWordLogic = ()=>{
+            const newWords = this.state.words.filter((value)=>!this.WordTableElement.needDeleteWord.includes(value.word))
+    
+            console.log('new words', newWords);
+            this.WordTableElement.clearSelect()
+    
+            // this.setState({
+            //     words:newWords
+            // })
+
+    
+            $.ajax({
+                method:'GET',
+                url:'/api/wordRecords/deletewords',
+                data:{needDeleteWord:this.WordTableElement.needDeleteWord}
+            }).then((words)=>{
+                Modal.success({
+                    title:'单词删除',
+                    content:'删除成功',
+                    onOk:()=>that.setState({words})
+                })
+            }).catch(err=>{
+                Modal.error({
+                    title:'删除失败',
+                    content:'error:'+JSON.stringify(err),
+                })
+            })
+        }
+        Modal.confirm({
+            title:'单词删除',
+            content:'确定要删除单词？',
+            onOk:deleteWordLogic
+        })
+    }
 
     render() {
         const {words} = this.state;
@@ -296,9 +316,29 @@ export default class WordRecord extends React.Component {
                 <SideMenu/>
                 <Layout>
                     <MyNavBars/>
-                    <div className='page-max-width mx-xl-5 mx-md-3 mx-1'>
-                        <TableFilter />
-                        <WordTable  words={words}/>
+                    <div className='page-max-width mx-xl-5 mx-md-3 mx-1 mt-5'>
+                        <div className='position-relative'>
+                            <div className='d-flex justify-content-between mb-3'>
+                                <TableFilter style={{zIndex:'100'}}/>                  
+                                <div className='d-flex float-right ' style={{zIndex:'100'}}>
+                                    <Input.Search placeholder='输入单词/中文翻译'/>
+                                    <Button className='mx-2' type="primary">搜索</Button>
+                                    {/* <Popconfirm 
+                                        placement='bottom' 
+                                        title={this.WordTableElement && this.WordTableElement.needDeleteWord.length === 0 ? '请先选择' : '确定要删除？'} 
+                                        okText='是的' 
+                                        cancelText='算了'
+                                        onConfirm=> */}
+                                    <Button type="danger" ghost onClick={()=>this.deleteWord()}>批量删除</Button>
+                                </div>
+                            </div>
+                            <div className='position-absolute w-100 text-center' style={{top:'0px'}}>
+                                <div className=' d-inline-block position-relative'  >
+                                    <Button type="primary">添加单词</Button>
+                                </div>
+                            </div>
+                        </div>
+                        <WordTable  words={words} ref={(WordTableElement)=>this.WordTableElement=WordTableElement}/>
                     </div>
                 </Layout>
             </Layout>
