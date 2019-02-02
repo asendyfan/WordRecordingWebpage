@@ -27,6 +27,9 @@
             }
         }
         ```
+- window
+    1. 刷新当前页面 bForceGet 默认值为false，意思为从缓冲读取当前页面，true时从服务器读取最新页面 `window.location.reload([bForceGet])`
+    1. 返回浏览过的指定页面 （返回上一页）`window.history.go(-1)`
 ### 标签上 ###
 1. select标签中改变option时，可以通过添加onchange事件监听，option值为e.target.value
 1. 阻止标签的默认事件发生,比如表单的自动提交 `event.preventDefault()`

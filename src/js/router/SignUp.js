@@ -51,18 +51,18 @@ export default class Login extends React.Component {
         const {isAlert} = this.state
         return <div style={{ marginTop: '16vh' }}>
             <form id="sign-form" className="border border-dark rounded mx-auto px-2 py-4" action="" >
-                <div className='text-center'><h3>Sign Up</h3></div>
+                <div className='text-center'><h3>注册账户</h3></div>
                 {isAlert && this.alertComponent('用户名已被使用.')}
                 <div className="form-group">
-                    <label for="validationDefault01">Name</label>
+                    <label for="validationDefault01">用户名</label>
                     <input type="text" class="form-control" id="validationDefault01" placeholder="Name" name="user" required />
                 </div>
                 <div className="form-group">
-                    <label for="exampleInputPassword1">Password</label>
+                    <label for="exampleInputPassword1">密码</label>
                     <input type="password" className="form-control" id="exampleInputPassword1" minLength="8" maxLength="20" placeholder="Password" name="password" required />
                 </div>
                 <div className='row justify-content-center'>
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn btn-primary">提交</button>
                 </div>
             </form>
         </div>

@@ -308,12 +308,10 @@ export default class WordRecord extends React.Component {
 
     searchWordByTypeWordOrTransfer = (searchKeys)=>{
         const {words} = this.state
-        console.log('words',words)
         const searchResult = words.filter((word)=>{
             console.log(word, searchKeys, word.word.includes(searchKeys), word.translate.includes(searchKeys))
             return word.word.includes(searchKeys)||word.translate.includes(searchKeys)
         })
-        console.log('search result', searchResult);
         this.setState({searchResult})
     }
 
@@ -330,7 +328,7 @@ export default class WordRecord extends React.Component {
         },{}) 
         return (
             <Layout className='route-min-height'>
-                <SideMenu/>
+                <SideMenu history={this.props.history}/>
                 <Layout>
                     <MyNavBars/>
                     <div className='page-max-width mx-xl-5 mx-md-3 mx-1 mt-5'>
@@ -340,7 +338,7 @@ export default class WordRecord extends React.Component {
                                 <div className='d-flex float-right ' style={{zIndex:'100'}}>
                                     <div className='mr-2'>
                                         <Input.Search placeholder='输入单词/中文翻译'
-                                            onchange={value=>!value && this.setState({searchResult:[]})} 
+                                            onChange={value=>!value && this.setState({searchResult:[]})} 
                                             style={{minWidth:'14rem'}}
                                             enterButton='搜索'
                                             allowClear 

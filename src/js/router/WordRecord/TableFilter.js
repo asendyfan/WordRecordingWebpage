@@ -52,7 +52,7 @@ class TableFilter extends React.Component{
         const {wordClassifications} = this.props
         console.log(this.props)
         console.log(wordClassifications)
-        return <div {...this.props}>
+        return <div style={this.props.style}>
             <Select defaultValue='所有单词' onSelect={(value)=>this.typeSelectChange(value)} style={{minWidth:'6.5rem'}}>
                 <Select.Option key='所有单词' value='所有单词'>所有单词{wordClassifications && wordClassifications['所有单词'] && `(${wordClassifications['所有单词']})`}</Select.Option>
                 {classifications.map(value=><Select.Option value={value} key={value}>{value}{wordClassifications && ` (${wordClassifications[value]?wordClassifications[value]:0})`}</Select.Option>)}

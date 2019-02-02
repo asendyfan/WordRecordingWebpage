@@ -1,5 +1,6 @@
 import React from 'react';
-import {Layout, Menu, Icon, Input, Button, Affix} from 'antd';
+import {Layout, Icon, Input, Button, Affix, Modal} from 'antd';
+import $ from 'jquery'
 import {getCookie} from '../../utils/get-cookie'
 import signout from '../../../pic/signout.svg';
 import signin from '../../../pic/signin.svg';
@@ -25,6 +26,23 @@ class SideMenu extends React.Component{
         this.state.collapsed &&this.state.noSearching && this.setState({collapsed:false})
     }
 
+    signInOrOut=()=>{
+        if(!this.user)return this.props.history.push('/signin');
+        else return Modal.confirm({
+            title:'退出',
+            content:'确定要退出吗？',
+            onOk:()=>{
+                $.ajax({
+                    type:'POST',
+                    url:'/api/user/signout',
+                }).then(()=>{
+                    console.log('success sign out')
+                    window.location.reload([true])
+                })
+            }
+        })
+    }
+
     render(){
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
         const sideContents = this.props
@@ -47,7 +65,7 @@ class SideMenu extends React.Component{
                             </div>
                             <div className='my-5 hover-pointer'>
                                 <Icon type='user' className='text-white' style={{fontSize:'2rem'}}/>
-                                <div className='d-block text-white'>{this.user?this.user:'sign in'}</div>
+                                <div className='d-block text-white'>{this.user?this.user:'User'}</div>
                             </div>
                             {collapsed ? 
                             <Icon 
@@ -72,21 +90,14 @@ class SideMenu extends React.Component{
                             <div className={`${!collapsed && Object.keys(translateResult).length?'visible':'invisible'} text-white`}>    
                                 <OnlineTranslation translateResult={translateResult}/>
                             </div>
-                            
                         </div>
                     </Sider>  
-                    <div className='text-white d-flex mx-auto justify-content-center' style={{position:'relative',bottom:'3rem',width:'4rem',width:!collapsed?'200px':'80px'}}>
+                    <div className='text-white d-flex mx-auto justify-content-center' 
+                        style={{position:'relative',bottom:'3rem',width:'4rem',width:!collapsed?'200px':'80px',cursor:'pointer'}}
+                        onClick={this.signInOrOut}>
                         {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}</span>}<embed src={this.user?signout:signin} style={{width:'1.5rem'}}/>  
                     </div>    
                 </Affix>
-                {/* {!collapsed && <div className='text-white'>
-                    
-                </div>} */}
-                {/* <div className='d-flex justify-content-center align-items-center hover-pointer' style={{backgroundColor:'#d7d7d7'}} onClick={this.onCollapse}>
-                    <div style={{height:'3rem',backgroundColor:'#3297fb',width:'0.8em',marginLeft:'-0.1em'}} className='d-flex align-items-center side-collapse-style' onMouseOver={()=>console.log(222)}>
-                        <Icon type={`caret-${collapsed?'right':'left'}`} className='align-middle text-white'/>
-                    </div>
-                </div> */}
             </div>
         )
     }
