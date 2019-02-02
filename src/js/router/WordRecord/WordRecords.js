@@ -121,7 +121,7 @@ class WordTable extends React.Component {
 
     rowSelection={
         onChange:(selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys instanceof Array}`, 'selectedRows: ', selectedRows);
+            // console.log(`selectedRowKeys: ${selectedRowKeys instanceof Array}`, 'selectedRows: ', selectedRows);
             this.setState({selectedRowKeys})
             this.needDeleteWord = selectedRows.length ?selectedRows.map(value=>value.word):[]
         }
@@ -138,7 +138,7 @@ class WordTable extends React.Component {
         const column = [
             {
                 title: (sortOrder)=>{
-                    console.log('sortOrder',sortOrder)
+                    // console.log('sortOrder',sortOrder)
                     return <div onClick={(e)=>{e.stopPropagation();this.setState({isTotalWordVisible:isTotalWordVisible?false:true})}}>单词<Icon className='ml-1' type={`eye${!isTotalWordVisible ? '-invisible':''}`} ></Icon></div>
                 },
                 dataIndex: 'word',
@@ -261,7 +261,8 @@ class WordTable extends React.Component {
 export default class WordRecord extends React.Component {
 
     state={
-        words:[]
+        words:[],
+        searchResult:[]
     }
 
     componentWillMount(){
@@ -271,10 +272,6 @@ export default class WordRecord extends React.Component {
             this.setState({words:data})
         }).catch(err=>console.error(err))
     }
-
-    // ModalMessage(){
-    //     Modal.
-    // }
 
     deleteWord= async ()=>{
         const that = this
@@ -309,8 +306,19 @@ export default class WordRecord extends React.Component {
         })
     }
 
+    searchWordByTypeWordOrTransfer = (searchKeys)=>{
+        const {words} = this.state
+        console.log('words',words)
+        const searchResult = words.filter((word)=>{
+            console.log(word, searchKeys, word.word.includes(searchKeys), word.translate.includes(searchKeys))
+            return word.word.includes(searchKeys)||word.translate.includes(searchKeys)
+        })
+        console.log('search result', searchResult);
+        this.setState({searchResult})
+    }
+
     render() {
-        const {words} = this.state;
+        const {words, searchResult} = this.state;
         console.log('words',words);
         const wordClassifications = words.reduce((pre, curWord)=>{
             pre['所有单词'] = pre['所有单词']===undefined?1:pre['所有单词']+1
@@ -330,8 +338,14 @@ export default class WordRecord extends React.Component {
                             <div className='d-flex justify-content-between mb-3'>
                                 <TableFilter style={{zIndex:'100'}} {...{wordClassifications}} />                  
                                 <div className='d-flex float-right ' style={{zIndex:'100'}}>
-                                    <Input.Search placeholder='输入单词/中文翻译'/>
-                                    <Button className='mx-2' type="primary">搜索</Button>
+                                    <div className='mr-2'>
+                                        <Input.Search placeholder='输入单词/中文翻译'
+                                            onchange={value=>!value && this.setState({searchResult:[]})} 
+                                            style={{minWidth:'14rem'}}
+                                            enterButton='搜索'
+                                            allowClear 
+                                            onSearch={this.searchWordByTypeWordOrTransfer}/>
+                                    </div>
                                     <Button type="danger" ghost onClick={()=>this.deleteWord()}>批量删除</Button>
                                 </div>
                             </div>
@@ -341,7 +355,7 @@ export default class WordRecord extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <WordTable  words={words} ref={(WordTableElement)=>this.WordTableElement=WordTableElement}/>
+                        <WordTable  words={searchResult.length?searchResult:words} ref={(WordTableElement)=>this.WordTableElement=WordTableElement}/>
                     </div>
                 </Layout>
             </Layout>
