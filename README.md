@@ -4,8 +4,8 @@
 
 ### react上 ###
 1. react加express，前后端分离方法，在*package.json*文件中，添加`"proxy": "http://localhost:3030/",`
-
 1. 关于react组件中**父组件与子组件**还有**子组件之间**的传递方式可以阅读淘宝前端的做法：[网页地址](http://taobaofed.org/blog/2016/11/17/react-components-communication/)
+1. 尽量保持状态的不变性，这样更利于维护和简化逻辑
 ### javascript上 ###
 - 如何使用promise+async/await是异步请求变成同步的，并且返回promise里面的值：
     + `let a = await new Promise(....).catch(err=>{...})`
@@ -27,8 +27,6 @@
             }
         }
         ```
-    
-
 ### 标签上 ###
 1. select标签中改变option时，可以通过添加onchange事件监听，option值为e.target.value
 1. 阻止标签的默认事件发生,比如表单的自动提交 `event.preventDefault()`

@@ -5,6 +5,7 @@ import _ from 'lodash';
 import eventProxy from '../../utils/event-proxy';
 import {Select, Tag, Modal} from 'antd';
 import MyNavbars from '../../component/MyNavbars';
+import ShowClassificationsModalWithIcon from './ShowClassificationsModalWithIcon';
 
 class SetWords extends React.Component{
     state={
@@ -145,7 +146,7 @@ class AddWord extends React.Component{
                     </div>
                     <div class="input-group-prepend">
                         <div class="input-group-text border-left-0 rounded-right">
-                            <ShowModal classifications={classifications} setClassificationOk={this.setClassificationOk}/>
+                            <ShowClassificationsModalWithIcon classifications={classifications} setClassificationOk={this.setClassificationOk}/>
                         </div>
                     </div>
                 </div>
@@ -234,123 +235,5 @@ class SelectWithHiddenSelectedOptions extends React.Component {
     }
 }
 
-class ShowModal extends React.Component {
-
-    state={
-        modalVisable : false,
-        thisClassifiction:[],
-        collectAddTagValues:[]
-    }
-
-    setModalVisable(modalVisable){
-        this.setState({modalVisable})
-    }
-
-    setTagVisable(){
-        const {thisClassifiction} = this.state
-        const tagVisible = thisClassifiction.reduce((pre, cur)=>{
-            pre[cur+'TagVisible'] = true
-            return pre
-        },{})
-        this.setState({collectAddTagValues:[],...tagVisible})
-    }
-
-    addTag(){
-        console.log('add tag')
-        const {addTagValue, thisClassifiction, collectAddTagValues} = this.state;
-        if(thisClassifiction.indexOf(addTagValue)>-1 || collectAddTagValues.indexOf(addTagValue)>-1)return alert('已有此标签')
-        collectAddTagValues.push(addTagValue);
-        this.setState({collectAddTagValues,[addTagValue+'TagVisible']:true})
-    }
-
-    saveFun(){
-        const {setClassificationOk} = this.props
-        const {thisClassifiction, collectAddTagValues} = this.state
-        // let classifications = thisClassifiction
-        //     .reduce((pre, cur, index)=>{
-        //         this.state[cur+'TagVisible'] && pre.push(cur)
-        //         return pre
-        //     },[])
-        //     .join(',')
-        for(let i=0;i<thisClassifiction.length;i++){
-            if(!this.state[thisClassifiction[i]+'TagVisible']){
-                thisClassifiction.splice(i,1)
-                i--
-            }
-        }
-        this.totalClassifiction = thisClassifiction.concat(collectAddTagValues).join(',');
-        console.log(thisClassifiction,collectAddTagValues,this.totalClassifiction)
-        $.ajax({
-            method:'GET',
-            url:'/api/wordRecords/setClassification',
-            data:{classifications:this.totalClassifiction}
-        }).then(data=>setClassificationOk()).catch(err=>alert('更新失败'+err))
-    }
-
-    render(){
-        const {modalVisable, thisClassifiction, collectAddTagValues} = this.state;
-        return (
-            <div>
-                <i class="fas fa-edit float-right" style={{cursor:'pointer'}} onClick={()=>this.setModalVisable(true)}></i>
-                <Modal
-                    title='编辑分类标签'
-                    centered
-                    visible = {modalVisable}
-                    onCancel={() => {this.setModalVisable(false);this.setTagVisable()}}
-                    onOk={()=>{this.setModalVisable(false);this.saveFun()}}>
-                        <div className='d-flex justify-content-center'>
-                            <input type='text' className='d-inline-block form-control mr-2' onChange={(e)=>{
-                                this.state.addTagValue = e.target.value
-                            }}/>
-                            <button className='btn btn-primary d-inline-block' onClick={(e) => {e.preventDefault();this.addTag()}}>添加</button>
-                        </div>
-                        <hr />
-                        <div className='d-flex'>
-                            {thisClassifiction.map((value, index) =>{
-                                // console.log(value,'visible',this.state[value+'TagVisible'])
-                                return <Tag 
-                                    closable 
-                                    visible={this.state[value+'TagVisible']} 
-                                    onClose={(e)=>{
-                                        e.preventDefault()
-                                        this.setState({thisClassifiction,[value+'TagVisible']:false})}
-                                    }> 
-                                    {value}
-                                </Tag>
-                            })}
-                            {collectAddTagValues.map((value, index) =>{
-                                return <Tag 
-                                    closable 
-                                    visible={this.state[value+'TagVisible']} 
-                                    onClose={(e)=>{
-                                        e.preventDefault()
-                                        collectAddTagValues.splice(index,1)
-                                        console.log('tag close',collectAddTagValues)
-                                        this.setState({collectAddTagValues,[value+'TagVisible']:false})}
-                                    }> 
-                                    {value}
-                                </Tag>
-                            })}
-                        </div>
-                </Modal>
-            </div>
-        )
-    }
-
-    componentDidUpdate(){
-        const {classifications, modalVisable} = this.props;
-        const {thisClassifiction} = this.state;
-        // console.log(classifications, thisClassifiction)
-        if((thisClassifiction.length < classifications.length)){
-            console.log(thisClassifiction, classifications)
-            const tagVisible = classifications.reduce((pre, cur)=>{
-                pre[cur+'TagVisible'] = true
-                return pre
-            },{})
-            console.log('tab visible',)
-            this.setState({thisClassifiction:_.cloneDeep(classifications),...tagVisible})
-        }   
-    }
-}
 
 export default SetWords

@@ -22,8 +22,9 @@ class WordTable extends React.Component {
         searchText: '',
         wordsType:'所有单词',
         words:[],
-        isTotalVisible:true,
-        selectedRowKeys:[]
+        isTotalTransVisible:true,
+        selectedRowKeys:[],
+        isTotalWordVisible:true
     };
     needDeleteWord=[]
 
@@ -113,9 +114,9 @@ class WordTable extends React.Component {
     }
 
     handleTranslateColumnVisible(e){
-        const {isTotalVisible} = this.state
-        const changeVisible = isTotalVisible?false:true
-        this.setState({isTotalVisible:changeVisible});
+        const {isTotalTransVisible} = this.state
+        const changeVisible = isTotalTransVisible?false:true
+        this.setState({isTotalTransVisible:changeVisible});
     }
 
     rowSelection={
@@ -131,16 +132,20 @@ class WordTable extends React.Component {
     }
 
     buildTable(){
-        const {wordsType, isTotalVisible, selectedRowKeys} = this.state
+        const {wordsType, isTotalTransVisible, selectedRowKeys, isTotalWordVisible} = this.state
         this.rowSelection.selectedRowKeys = selectedRowKeys
         const {words} = this.props
         const column = [
             {
-                title: '单词',
+                title: (sortOrder)=>{
+                    console.log('sortOrder',sortOrder)
+                    return <div onClick={(e)=>{e.stopPropagation();this.setState({isTotalWordVisible:isTotalWordVisible?false:true})}}>单词<Icon className='ml-1' type={`eye${!isTotalWordVisible ? '-invisible':''}`} ></Icon></div>
+                },
                 dataIndex: 'word',
                 sorter: (a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1,
                 ...this.getColumnSearchProps('word'),
-                align: 'center',
+                align: 'center', 
+                render:(text)=>isTotalWordVisible?text:'*****'
             },
             {
                 title:'记录日期',
@@ -208,10 +213,10 @@ class WordTable extends React.Component {
                 align: 'center',
             },
             {
-                title: ()=><div>翻译<Icon type={isTotalVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
+                title: ()=><div>翻译<Icon type={isTotalTransVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
                 dataIndex: 'translate',
                 align: 'center',
-                render:(text)=>isTotalVisible?text:'*****'
+                render:(text)=>isTotalTransVisible?text:'*****'
             },
             {
                 title: '记录天数',
@@ -233,7 +238,7 @@ class WordTable extends React.Component {
                     starsNum: data.starsNum
                 }
             })
-        return <Table rowSelection={this.rowSelection} columns={column} dataSource={values} bordered />
+        return <Table rowSelection={this.rowSelection} columns={column} dataSource={values}  />
     }
 
     render() {
@@ -280,11 +285,6 @@ export default class WordRecord extends React.Component {
             console.log('new words', newWords);
             this.WordTableElement.clearSelect()
     
-            // this.setState({
-            //     words:newWords
-            // })
-
-    
             $.ajax({
                 method:'GET',
                 url:'/api/wordRecords/deletewords',
@@ -311,6 +311,15 @@ export default class WordRecord extends React.Component {
 
     render() {
         const {words} = this.state;
+        console.log('words',words);
+        const wordClassifications = words.reduce((pre, curWord)=>{
+            pre['所有单词'] = pre['所有单词']===undefined?1:pre['所有单词']+1
+            curWord.classifications.split(',').forEach(classification=>{
+                if(!classification)return
+                pre[classification] = pre[classification]===undefined?1:pre[classification]+1
+            })
+            return pre
+        },{}) 
         return (
             <Layout className='route-min-height'>
                 <SideMenu/>
@@ -319,16 +328,10 @@ export default class WordRecord extends React.Component {
                     <div className='page-max-width mx-xl-5 mx-md-3 mx-1 mt-5'>
                         <div className='position-relative'>
                             <div className='d-flex justify-content-between mb-3'>
-                                <TableFilter style={{zIndex:'100'}}/>                  
+                                <TableFilter style={{zIndex:'100'}} {...{wordClassifications}} />                  
                                 <div className='d-flex float-right ' style={{zIndex:'100'}}>
                                     <Input.Search placeholder='输入单词/中文翻译'/>
                                     <Button className='mx-2' type="primary">搜索</Button>
-                                    {/* <Popconfirm 
-                                        placement='bottom' 
-                                        title={this.WordTableElement && this.WordTableElement.needDeleteWord.length === 0 ? '请先选择' : '确定要删除？'} 
-                                        okText='是的' 
-                                        cancelText='算了'
-                                        onConfirm=> */}
                                     <Button type="danger" ghost onClick={()=>this.deleteWord()}>批量删除</Button>
                                 </div>
                             </div>
