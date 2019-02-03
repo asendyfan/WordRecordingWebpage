@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import * as serviceWorker from './serviceWorker';
 import Home from './js/router/Home';
@@ -11,7 +11,8 @@ import SignUp from './js/router/SignUp';
 import Forbidden from './js/router/Forbidden';
 import Setting from './js/router/Setting';
 
-
+import "antd/dist/antd.css";
+import 'antd/dist/antd.less';
 import './css/index.css';
 
 

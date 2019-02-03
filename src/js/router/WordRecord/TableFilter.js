@@ -2,9 +2,16 @@ import React from 'react';
 import eventProxy from '../../utils/event-proxy';
 import $ from 'jquery';
 import { Select, Modal, Icon } from 'antd';
-// import ShowClassificationsModal from './ShowClassificationsModal';
 import ShowClassificationsModal from './ShowClassificationsModal';
 
+/**
+ *
+ *
+ * @class TableFilter
+ * @extends {React.Component}
+ * @props wordClassifications [Object] 每个分类对应的单词数量 {'所有单词':10,'生活':5,...}
+ * @props style [Object] div标签的样式 非必须
+ */
 class TableFilter extends React.Component{
 
     state={
@@ -48,11 +55,9 @@ class TableFilter extends React.Component{
     }
 
     render(){
-        const {classifications, editClassificatiModal} = this.state;
-        const {wordClassifications} = this.props
-        console.log(this.props)
-        console.log(wordClassifications)
-        return <div style={this.props.style}>
+        const {classifications} = this.state;
+        const {wordClassifications,style} = this.props
+        return <div style={style}>
             <Select defaultValue='所有单词' onSelect={(value)=>this.typeSelectChange(value)} style={{minWidth:'6.5rem'}}>
                 <Select.Option key='所有单词' value='所有单词'>所有单词{wordClassifications && wordClassifications['所有单词'] && `(${wordClassifications['所有单词']})`}</Select.Option>
                 {classifications.map(value=><Select.Option value={value} key={value}>{value}{wordClassifications && ` (${wordClassifications[value]?wordClassifications[value]:0})`}</Select.Option>)}

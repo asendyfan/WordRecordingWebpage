@@ -55,11 +55,11 @@ export default class SignIn extends React.Component {
                 <div className='text-center'><h3>登陆</h3></div>
                 {isAlert && this.alertComponent('用户名或者密码错误.')}
                 <div className="form-group">
-                    <label for="validationDefault01">用户名</label>
-                    <input type="text" class="form-control" id="validationDefault01" placeholder="Name" name="user" required />
+                    <label htmlFor="validationDefault01">用户名</label>
+                    <input type="text" className="form-control" id="validationDefault01" placeholder="Name" name="user" required />
                 </div>
                 <div className="form-group">
-                    <label for="exampleInputPassword1">密码</label>
+                    <label htmlFor="exampleInputPassword1">密码</label>
                     <input type="password" className="form-control" id="exampleInputPassword1" minLength="8" maxLength="20" placeholder="Password" name="password" required />
                 </div>
                 <div className='position-relative'>

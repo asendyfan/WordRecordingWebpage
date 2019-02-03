@@ -1,5 +1,4 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
 import MyNavbars from '../component/MyNavbars';
 class Setting extends React.Component{
     render(){

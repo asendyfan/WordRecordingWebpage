@@ -17,10 +17,10 @@ export default class MyNavbars extends React.Component{
     render(){
         let userName = getCookie('user');
         userName = userName?userName:'User';
-        console.log(userName)
+        console.log('is',userName)
         return (
             <div className="dropdown" style={{marginRight:'3rem'}}>
-                <a role="button" className="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a role="button" className="dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-haspopup="true" aria-expanded="false">
                     <i className="fas fa-user"></i> {userName}
                 </a>
                 <div className="dropdown-menu dropdown-menu-right">

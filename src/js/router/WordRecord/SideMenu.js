@@ -7,7 +7,7 @@ import signin from '../../../pic/signin.svg';
 import OnlineTranslation from './OnlineTranslation';
 import getTranslateResultThroughWord from './getTranslateResultThroughWord';
 
-const {Header, Content, Sider} = Layout
+const {Sider} = Layout
 
 class SideMenu extends React.Component{
     state ={
@@ -45,7 +45,6 @@ class SideMenu extends React.Component{
 
     render(){
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
-        const sideContents = this.props
         return (
             <div onMouseOver={this.onpenSideMenu} >
                 <Affix offsetTop={0}  style={{width:!collapsed?'200px':'80px'}}>
@@ -93,7 +92,7 @@ class SideMenu extends React.Component{
                         </div>
                     </Sider>  
                     <div className='text-white d-flex mx-auto justify-content-center' 
-                        style={{position:'relative',bottom:'3rem',width:'4rem',width:!collapsed?'200px':'80px',cursor:'pointer'}}
+                        style={{position:'relative',bottom:'3rem',width:!collapsed?'200px':'80px',cursor:'pointer'}}
                         onClick={this.signInOrOut}>
                         {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}</span>}<embed src={this.user?signout:signin} style={{width:'1.5rem'}}/>  
                     </div>    

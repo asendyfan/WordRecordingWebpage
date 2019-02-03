@@ -1,9 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-import _ from 'lodash';
 import MyNavBars from '../../component/MyNavbars';
-import { Table, Button, Icon, Input, Rate, DatePicker, Layout, Popconfirm, message, Modal, Spin } from 'antd';
-import "antd/dist/antd.css";
+import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal } from 'antd';
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
 import TableFilter from './TableFilter';
@@ -185,7 +183,7 @@ class WordTable extends React.Component {
                         value: 5
                     },
                 ],
-                onFilter: (value, record) => record.starsNum == value,
+                onFilter: (value, record) => record.starsNum === Number(value),
                 align: 'center',
             },
             {
@@ -209,7 +207,7 @@ class WordTable extends React.Component {
                     text: 'adv.',
                     value: 'adv.'
                 }],
-                onFilter: (value, record) => record.wordClass == value,
+                onFilter: (value, record) => record.wordClass === value,
                 align: 'center',
             },
             {
@@ -229,6 +227,7 @@ class WordTable extends React.Component {
             .filter(data => wordsType === '所有单词' ? true : data.classifications.includes(wordsType))
             .map(data => {
                 return {
+                    key:data.word,
                     word: data.word,
                     phonetic:data.phonetic,
                     wordClass: data.wordClass,
@@ -247,14 +246,6 @@ class WordTable extends React.Component {
                 {this.buildTable()}
             </div>
         )
-    }
-
-    componentDidUpdate(){
-        // const {words} = this.props
-        // if(this.state.words.length===0 && words.length!==0){
-        //     const nowWords = _.cloneDeep(words)
-        //     this.setState({words:nowWords});
-        // }
     }
 }
 

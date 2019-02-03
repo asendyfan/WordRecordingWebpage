@@ -1,9 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-import _ from 'lodash';
 
-import eventProxy from '../../utils/event-proxy';
-import {Select, Tag, Modal} from 'antd';
+import {Select} from 'antd';
 import MyNavbars from '../../component/MyNavbars';
 import ShowClassificationsModalWithIcon from './ShowClassificationsModalWithIcon';
 
@@ -126,7 +124,6 @@ class AddWord extends React.Component{
 
     render(){
         const {phonetic, classifications} = this.state
-        const classificationsModalId = 'exampleModalCenter'
         return <div className='d-flex justify-content-center'>
             <form className='form-inline p-2' id='addWord' action=''>
                 <label class="sr-only" for="inlineFormInputGroupWord">word</label>

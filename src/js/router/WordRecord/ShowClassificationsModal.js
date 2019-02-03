@@ -23,7 +23,6 @@ export default class ShowClassificationsModal extends React.Component {
     }
 
     addTag(){
-        console.log('add tag')
         const {addTagValue, thisClassifiction} = this.state;
         if(!addTagValue)return alert('不能为空')
         if(thisClassifiction.indexOf(addTagValue)>-1)return alert('已有此标签')
@@ -31,7 +30,7 @@ export default class ShowClassificationsModal extends React.Component {
     }
 
     closeTag(thisClassifiction, deleteValue){
-        console.log('tag close',deleteValue)
+        // console.log('tag close',deleteValue)
         this.setState({thisClassifiction:thisClassifiction.filter(classification=>classification!==deleteValue)})
     }
 
@@ -43,7 +42,7 @@ export default class ShowClassificationsModal extends React.Component {
         const {setClassificationOk} = this.props
         const {thisClassifiction} = this.state
         this.totalClassifiction = thisClassifiction.join(',');
-        console.log(thisClassifiction,this.totalClassifiction)
+        // console.log(thisClassifiction,this.totalClassifiction)
         $.ajax({
             method:'GET',
             url:'/api/wordRecords/setClassification',
@@ -54,10 +53,14 @@ export default class ShowClassificationsModal extends React.Component {
         .catch(err=>alert('更新失败'+err))
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(!this.state.modalVisable && !nextState.modalVisable)return false
+        else return true
+    }
+
     render(){
         const {modalVisable, thisClassifiction, addTagValue} = this.state;
-        console.log('render modal','visialbe',modalVisable)
-        console.log(thisClassifiction)
+        console.log('render modal','visialbe',modalVisable,thisClassifiction)
         return (
             <div>
                 <Modal
