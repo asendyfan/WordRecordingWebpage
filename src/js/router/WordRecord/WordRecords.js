@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-import MyNavBars from '../../component/MyNavbars';
+// import MyNavBars from '../../component/MyNavbars';
 import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal } from 'antd';
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
@@ -136,7 +136,6 @@ class WordTable extends React.Component {
         const column = [
             {
                 title: (sortOrder)=>{
-                    // console.log('sortOrder',sortOrder)
                     return <div onClick={(e)=>{e.stopPropagation();this.setState({isTotalWordVisible:isTotalWordVisible?false:true})}}>单词<Icon className='ml-1' type={`eye${!isTotalWordVisible ? '-invisible':''}`} ></Icon></div>
                 },
                 dataIndex: 'word',
@@ -219,6 +218,11 @@ class WordTable extends React.Component {
             {
                 title: '记录天数',
                 dataIndex: 'recordDays',
+                align: 'center',
+            },
+            {
+                title: '操作',
+                dataIndex: 'operation',
                 align: 'center',
             },
         ]
@@ -321,9 +325,9 @@ export default class WordRecord extends React.Component {
             <Layout className='route-min-height'>
                 <SideMenu history={this.props.history}/>
                 <Layout>
-                    <MyNavBars/>
+                    {/* <MyNavBars/> */}
                     <div className='page-max-width mx-xl-5 mx-md-3 mx-1 mt-5'>
-                        <div className='position-relative'>
+                        <div className='position-relative mt-3'>
                             <div className='d-flex justify-content-between mb-3'>
                                 <TableFilter style={{zIndex:'100'}} {...{wordClassifications}} />                  
                                 <div className='d-flex float-right ' style={{zIndex:'100'}}>

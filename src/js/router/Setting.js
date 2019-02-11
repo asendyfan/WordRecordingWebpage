@@ -1,12 +1,12 @@
 import React from 'react';
-import MyNavbars from '../component/MyNavbars';
+// import MyNavbars from '../component/MyNavbars';
 class Setting extends React.Component{
     render(){
         const settings = [
             {name:'Set Words',path:'/setWords'},
             {name:'edit blog',path:'/setWords'}];
         return<div>
-            <MyNavbars/>
+            {/* <MyNavbars/> */}
             <div className='d-flex justify-content-center mt-5'>
                 <div className='btn-group-vertical' role='group'>
                     {settings.map((value, index)=>{

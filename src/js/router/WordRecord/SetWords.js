@@ -2,7 +2,7 @@ import React from 'react';
 import $ from 'jquery';
 
 import {Select} from 'antd';
-import MyNavbars from '../../component/MyNavbars';
+// import MyNavbars from '../../component/MyNavbars';
 import ShowClassificationsModalWithIcon from './ShowClassificationsModalWithIcon';
 
 class SetWords extends React.Component{
@@ -37,7 +37,7 @@ class SetWords extends React.Component{
             </div>
         </div>
         return <div>
-            <MyNavbars/>
+            {/* <MyNavbars/> */}
             {navs}
             {module==='添加单词' && <AddWord getTranslateResult={this.getTranslateResult} />}
             {module==='添加单词' && showTranslateComponent && <OnlineTranslation translateResult={translateResult}/>}
@@ -84,7 +84,7 @@ class AddWord extends React.Component{
             method:'GET',
             url:'/api/wordRecords/getClassification',
         }).catch(err=>{console.error('get classification error',err);alert('没有权限')})
-        console.log(data)
+        console.log('getClassification',data)
         this.setState({classifications:data?data.split(','):[]})
     }
 
