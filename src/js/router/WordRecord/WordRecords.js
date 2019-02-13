@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from 'jquery';
-// import MyNavBars from '../../component/MyNavbars';
-import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal } from 'antd';
+import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal, Popconfirm, Dropdown, Menu, Select, Tooltip, List } from 'antd';
+import {getCookie} from '../../utils/get-cookie'
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
 import TableFilter from './TableFilter';
@@ -14,6 +14,7 @@ class WordTable extends React.Component {
         eventProxy.on('wordsTypeChange', (wordsType)=>{
             this.setState({wordsType})
         })
+        eventProxy.on('classifications',(classifications)=>this.classifications = classifications)
     }
 
     state = {
@@ -22,9 +23,11 @@ class WordTable extends React.Component {
         words:[],
         isTotalTransVisible:true,
         selectedRowKeys:[],
-        isTotalWordVisible:true
+        isTotalWordVisible:true,
+        editingKey:'',
     };
     needDeleteWord=[]
+    user = getCookie('user')
 
     getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({
@@ -129,20 +132,104 @@ class WordTable extends React.Component {
         this.setState({selectedRowKeys:[]})
     }
 
+    isEditing=(record)=>{
+        // console.log('isEditing',record)
+        return record.key === this.state.editingKey
+    }
+    save=(data)=>{
+        this.props.setWord(data)
+        this.setState({editingKey:''})
+    }
+    cancel=(key)=>{
+        console.log('cancel')
+        this.setState({editingKey:''})
+    }
+    edit=(key)=>{
+        console.log('edit',key)
+        this.setState({editingKey:key})
+    }
+    editClassifications = (record)=>{
+        let specifiedClassifications = []
+        console.log((record))
+        Modal.confirm({
+            title:'单词分类编辑',
+            icon:<Icon className='text-primary' type="info-circle" />,
+            content:<Select
+                mode='multiple'
+                defaultValue={record.classifications?record.classifications.split(','):[]}
+                style={{width:'100%'}}
+                onChange={(value)=>specifiedClassifications=value.join(',')}>
+                {this.classifications.map(classification=>(
+                    <Select.Option key={record.key+classification}>
+                        {classification}
+                    </Select.Option>
+                ))}
+            </Select>,
+            onOk:()=>this.updateWord({word:record.word,classifications:specifiedClassifications})
+        })
+    }
+
+    addEditColumn = (column, values)=>{
+        column.push({
+            title: '操作',
+            dataIndex: 'operation',
+            align: 'center',
+            render: (text, record)=> {
+                const editable = this.isEditing(record);
+                const operateMenu = (
+                    <Menu>
+                        <Menu.Item key='编辑'>
+                            <a className='text-primary' onClick = {()=>this.edit(record.key)}>编辑</a>
+                        </Menu.Item >
+                        <Menu.Item key='删除'>
+                            <a className='text-primary' onClick = {()=>this.props.deleteWordByOperation(record.key)}>删除</a>
+                        </Menu.Item>
+                        <Menu.Item key='分类'>
+                            <a className='text-primary' onClick = {()=>this.editClassifications(record)}>分类</a>
+                        </Menu.Item>
+                    </Menu>
+                )
+                return (
+                    <div>
+                        {editable?(
+                            <span>
+                                <a className='text-primary mr-2' href='javascript:;' onClick={()=>{
+                                    this.save({word:this.editWordElement.state.value.trim(),translate:this.editTranslateElement.textAreaRef.value.trim()})
+                                    }}>保存</a>
+                                <Popconfirm
+                                    title='您确定取消吗？'
+                                    onConfirm={()=>this.cancel(record.key)}>
+                                    <a className='text-primary'>取消</a>
+                                </Popconfirm>
+                            </span>
+                        ):(
+                            <Dropdown overlay={operateMenu}><a className="ant-dropdown-link" href="#">操作<Icon type='down'/></a></Dropdown>
+                        )}
+                    </div>
+                )
+            }
+        })
+    }
+
     buildTable(){
         const {wordsType, isTotalTransVisible, selectedRowKeys, isTotalWordVisible} = this.state
         this.rowSelection.selectedRowKeys = selectedRowKeys
         const {words} = this.props
         const column = [
             {
-                title: (sortOrder)=>{
+                title: ()=>{
                     return <div onClick={(e)=>{e.stopPropagation();this.setState({isTotalWordVisible:isTotalWordVisible?false:true})}}>单词<Icon className='ml-1' type={`eye${!isTotalWordVisible ? '-invisible':''}`} ></Icon></div>
                 },
                 dataIndex: 'word',
                 sorter: (a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1,
                 ...this.getColumnSearchProps('word'),
                 align: 'center', 
-                render:(text)=>isTotalWordVisible?text:'*****'
+                render:(text, record)=>this.isEditing(record)?<Input style={{width:'9rem'}} defaultValue={text} ref={(ele)=>this.editWordElement=ele}/>:text,
+                onCell:(record, rowIndex)=>({
+                    record,
+                    inputType:'number',
+                    editing:this.isEditing(record)
+                })
             },
             {
                 title:'记录日期',
@@ -190,57 +277,62 @@ class WordTable extends React.Component {
                 dataIndex:'phonetic',
                 align:'center'
             },
-            {
-                title: '词性',
-                dataIndex: 'wordClass',
-                filters: [{
-                    text: 'n.',
-                    value: 'n.'
-                }, {
-                    text: 'v.',
-                    value: 'v.'
-                }, {
-                    text: 'adj.',
-                    value: 'adj.'
-                }, {
-                    text: 'adv.',
-                    value: 'adv.'
-                }],
-                onFilter: (value, record) => record.wordClass === value,
-                align: 'center',
-            },
+            // {
+            //     title: '词性',
+            //     dataIndex: 'wordClass',
+            //     filters: [{
+            //         text: 'n.',
+            //         value: 'n.'
+            //     }, {
+            //         text: 'v.',
+            //         value: 'v.'
+            //     }, {
+            //         text: 'adj.',
+            //         value: 'adj.'
+            //     }, {
+            //         text: 'adv.',
+            //         value: 'adv.'
+            //     }],
+            //     onFilter: (value, record) => record.wordClass === value,
+            //     align: 'center',
+            // },
             {
                 title: ()=><div>翻译<Icon type={isTotalTransVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
                 dataIndex: 'translate',
-                align: 'center',
-                render:(text)=>isTotalTransVisible?text:'*****'
+                align: 'left',
+                render:(text, record)=>this.isEditing(record)?
+                    <Input.TextArea defaultValue={text} autosize={{minRows:1, maxRows:6}} ref={(ele)=>this.editTranslateElement=ele}/>:
+                    <Tooltip placement="bottom" title={<List size='small' style={{color:'white'}} dataSource={text.split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
+                        {text.split('\n').map((value, index, array)=>{
+                            if(index>2)return
+                            if(index === 0)return <span key={value}>{value}<br/></span>
+                            if(index === 1) return <span key={value}>{value}</span>
+                            if(index === 2) return <span>.....</span>
+                        })}
+                    </Tooltip>
             },
             {
                 title: '记录天数',
                 dataIndex: 'recordDays',
                 align: 'center',
-            },
-            {
-                title: '操作',
-                dataIndex: 'operation',
-                align: 'center',
-            },
+            }
         ]
-
         const values = words
             .filter(data => wordsType === '所有单词' ? true : data.classifications.includes(wordsType))
             .map(data => {
                 return {
                     key:data.word,
-                    word: data.word,
+                    word: isTotalWordVisible?data.word:'*****',
                     phonetic:data.phonetic,
                     wordClass: data.wordClass,
-                    translate: data.translate,
+                    translate: isTotalTransVisible?data.translate:'*****',
                     recordingTime: data.recordingTime,
                     recordDays: Math.ceil(( new Date(new Date().toLocaleDateString()).getTime() - new Date(new Date(data.recordingTime).toLocaleDateString()).getTime()  )/(1000*60*60*24) + 1 ),
-                    starsNum: data.starsNum
+                    starsNum: data.starsNum,
+                    classifications:data.classifications,
                 }
             })
+        if(this.user)this.addEditColumn(column, values)
         return <Table rowSelection={this.rowSelection} columns={column} dataSource={values}  />
     }
 
@@ -261,6 +353,10 @@ export default class WordRecord extends React.Component {
     }
 
     componentWillMount(){
+        this.getWord()
+    }
+
+    getWord = ()=>{
         $.ajax({
             url:'/api/wordRecords/getwords'            
         }).then(data=>{
@@ -268,36 +364,55 @@ export default class WordRecord extends React.Component {
         }).catch(err=>console.error(err))
     }
 
-    deleteWord= async ()=>{
-        const that = this
-        if(!this.WordTableElement.needDeleteWord.length)return message.info('请先选择')
+    setWord=(data)=>{
+        $.ajax({
+            url:'api/wordRecords/setword',
+            data:data
+        }).then(()=>{
+            this.getWord()
+        }).catch(err=>console.error(err))
+    }
+
+    deleteWordByOperation = (needDeleteWord)=>{
         const deleteWordLogic = ()=>{
-            const newWords = this.state.words.filter((value)=>!this.WordTableElement.needDeleteWord.includes(value.word))
-    
-            console.log('new words', newWords);
-            this.WordTableElement.clearSelect()
-    
-            $.ajax({
-                method:'GET',
-                url:'/api/wordRecords/deletewords',
-                data:{needDeleteWord:this.WordTableElement.needDeleteWord}
-            }).then((words)=>{
-                Modal.success({
-                    title:'单词删除',
-                    content:'删除成功',
-                    onOk:()=>that.setState({words})
-                })
-            }).catch(err=>{
-                Modal.error({
-                    title:'删除失败',
-                    content:'error:'+JSON.stringify(err),
-                })
-            })
+            this.deleteWordRequest([needDeleteWord])
         }
         Modal.confirm({
             title:'单词删除',
             content:'确定要删除单词？',
             onOk:deleteWordLogic
+        })
+    }
+
+    deleteWordBySelect = ()=>{
+        if(!this.WordTableElement.needDeleteWord.length)return message.info('请先选择')
+        const deleteWordLogic = ()=>{
+            this.WordTableElement.clearSelect()
+            this.deleteWordRequest(this.WordTableElement.needDeleteWord)
+        }
+        Modal.confirm({
+            title:'单词删除',
+            content:'确定要删除单词？',
+            onOk:deleteWordLogic
+        })
+    }
+
+    deleteWordRequest = (needDeleteWord)=>{
+        $.ajax({
+            method:'GET',
+            url:'/api/wordRecords/deletewords',
+            data:{needDeleteWord:needDeleteWord}
+        }).then((words)=>{
+            Modal.success({
+                title:'单词删除',
+                content:'删除成功',
+                onOk:()=>{console.log('删除成功',words);this.setState({words})}
+            })
+        }).catch(err=>{
+            Modal.error({
+                title:'删除失败',
+                content:'error:'+JSON.stringify(err),
+            })
         })
     }
 
@@ -313,9 +428,9 @@ export default class WordRecord extends React.Component {
     render() {
         const {words, searchResult} = this.state;
         console.log('words',words);
-        const wordClassifications = words.reduce((pre, curWord)=>{
+        const wordClassifications = words.reduce((pre, curWord)=>{//记录每个分类的次数
             pre['所有单词'] = pre['所有单词']===undefined?1:pre['所有单词']+1
-            curWord.classifications.split(',').forEach(classification=>{
+            curWord.classifications && curWord.classifications.split(',').forEach(classification=>{
                 if(!classification)return
                 pre[classification] = pre[classification]===undefined?1:pre[classification]+1
             })
@@ -339,7 +454,7 @@ export default class WordRecord extends React.Component {
                                             allowClear 
                                             onSearch={this.searchWordByTypeWordOrTransfer}/>
                                     </div>
-                                    <Button type="danger" ghost onClick={()=>this.deleteWord()}>批量删除</Button>
+                                    <Button type="danger" ghost onClick={()=>this.deleteWordBySelect()}>批量删除</Button>
                                 </div>
                             </div>
                             <div className='position-absolute w-100 text-center' style={{top:'0px'}}>
@@ -348,7 +463,11 @@ export default class WordRecord extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <WordTable  words={searchResult.length?searchResult:words} ref={(WordTableElement)=>this.WordTableElement=WordTableElement}/>
+                        <WordTable  
+                            words={searchResult.length?searchResult:words} 
+                            ref={(WordTableElement)=>this.WordTableElement=WordTableElement} 
+                            deleteWordByOperation={this.deleteWordByOperation}
+                            setWord={this.setWord}/>
                     </div>
                 </Layout>
             </Layout>

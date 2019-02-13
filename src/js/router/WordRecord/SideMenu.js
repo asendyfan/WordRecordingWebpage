@@ -1,5 +1,5 @@
 import React from 'react';
-import {Layout, Icon, Input, Button, Affix, Modal} from 'antd';
+import {Layout, Icon, Input, Button, Modal} from 'antd';
 import $ from 'jquery'
 import {getCookie} from '../../utils/get-cookie'
 import signout from '../../../pic/signout.svg';
@@ -46,8 +46,7 @@ class SideMenu extends React.Component{
     render(){
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
         return (
-            <div onMouseOver={this.onpenSideMenu} >
-                <Affix offsetTop={0}  style={{width:!collapsed?'200px':'80px'}}>
+            <div onMouseOver={this.onpenSideMenu} style={{backgroundColor:'rgb(0,21,41)'}} >
                     <Sider
                         collapsed={collapsed}
                         onCollapse={this.onCollapse}
@@ -96,7 +95,6 @@ class SideMenu extends React.Component{
                         onClick={this.signInOrOut}>
                         {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}</span>}<embed src={this.user?signout:signin} style={{width:'1.5rem'}}/>  
                     </div>    
-                </Affix>
             </div>
         )
     }

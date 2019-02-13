@@ -24,7 +24,7 @@ class TableFilter extends React.Component{
             console.log('编辑')
             this.classificationsModal.setModalVisable(true)
         }
-        else eventProxy.trigger('wordsTypeChange', value)
+        else eventProxy.trigger('wordsTypeChange', value)//指定的分类
     }
 
     editClassificationModal=()=>{
@@ -37,6 +37,11 @@ class TableFilter extends React.Component{
         })
     }
 
+    /**
+     *获取所有分类
+     *
+     * @memberof TableFilter
+     */
     setClassificationOk=async ()=>{
         let data = await $.ajax({
             method:'GET',
@@ -50,7 +55,9 @@ class TableFilter extends React.Component{
         $.ajax({
             url:'/api/wordRecords/getClassification'            
         }).then(data=>{
-            this.setState({classifications:data.split(',')})
+            const classifications = data.split(',')
+            this.setState({classifications})
+            eventProxy.trigger('classifications',classifications)//有哪些分类
         }).catch(err=>console.error(err))
     }
 
