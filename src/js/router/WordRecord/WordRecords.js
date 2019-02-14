@@ -156,16 +156,16 @@ class WordTable extends React.Component {
             icon:<Icon className='text-primary' type="info-circle" />,
             content:<Select
                 mode='multiple'
-                defaultValue={record.classifications?record.classifications.split(','):[]}
+                defaultValue={record.classifications?record.classifications.split(',').map(classification=>record.key+classification):[]}
                 style={{width:'100%'}}
-                onChange={(value)=>specifiedClassifications=value.join(',')}>
+                onChange={(value)=>specifiedClassifications=value.join(',').replace(new RegExp(record.key,'g'),'')}>
                 {this.classifications.map(classification=>(
                     <Select.Option key={record.key+classification}>
                         {classification}
                     </Select.Option>
                 ))}
             </Select>,
-            onOk:()=>this.updateWord({word:record.word,classifications:specifiedClassifications})
+            onOk:()=>this.props.setWord({word:record.word,classifications:specifiedClassifications})
         })
     }
 
@@ -232,17 +232,6 @@ class WordTable extends React.Component {
                 })
             },
             {
-                title:'记录日期',
-                dataIndex:'recordingTime',
-                sorter:(a, b)=>a.recordingTime > b.recordingTime?1:-1,
-                defaultSortOrder:'descend',
-                ...this.getColumnDatePickerProps('recordingTime'),
-                align:'center',
-                render:(text)=>{
-                    return new Date(text).toLocaleDateString('nu-arab',{'timeZone':'Asia/Shanghai','year':'2-digit','month':'2-digit','day':'2-digit'})
-                }
-            },
-            {
                 title:'熟练度',
                 dataIndex: 'starsNum',
                 render: (value, row, index) => <Rate allowHalf disabled value={value} />,
@@ -300,6 +289,7 @@ class WordTable extends React.Component {
                 title: ()=><div>翻译<Icon type={isTotalTransVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
                 dataIndex: 'translate',
                 align: 'left',
+                className:'column-max-width showEllipsis',
                 render:(text, record)=>this.isEditing(record)?
                     <Input.TextArea defaultValue={text} autosize={{minRows:1, maxRows:6}} ref={(ele)=>this.editTranslateElement=ele}/>:
                     <Tooltip placement="bottom" title={<List size='small' style={{color:'white'}} dataSource={text.split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
@@ -309,7 +299,18 @@ class WordTable extends React.Component {
                             if(index === 1) return <span key={value}>{value}</span>
                             if(index === 2) return <span>.....</span>
                         })}
-                    </Tooltip>
+                    </Tooltip>,
+            },
+            {
+                title:'记录日期',
+                dataIndex:'recordingTime',
+                sorter:(a, b)=>a.recordingTime > b.recordingTime?1:-1,
+                defaultSortOrder:'descend',
+                ...this.getColumnDatePickerProps('recordingTime'),
+                align:'center',
+                render:(text)=>{
+                    return new Date(text).toLocaleDateString('nu-arab',{'timeZone':'Asia/Shanghai','year':'2-digit','month':'2-digit','day':'2-digit'})
+                }
             },
             {
                 title: '记录天数',
@@ -318,7 +319,7 @@ class WordTable extends React.Component {
             }
         ]
         const values = words
-            .filter(data => wordsType === '所有单词' ? true : data.classifications.includes(wordsType))
+            .filter(data => wordsType === '所有单词' ? true : data.classifications && data.classifications.includes(wordsType))
             .map(data => {
                 return {
                     key:data.word,
