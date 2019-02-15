@@ -11,6 +11,16 @@ export default class Login extends React.Component {
         }
     }
 
+    componentWillMount(){
+        $.ajax({
+            url:'api/admincheck',
+            async:false,
+        }).catch(err=>{
+            console.log('err',err);
+            this.props.history.push('/forbidden')
+        })
+    }
+
     componentDidMount() {
         const form = $('#sign-form')
         form.submit( (event) => {

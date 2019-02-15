@@ -69,7 +69,13 @@ export default class SignIn extends React.Component {
                     <button type="button" 
                         className="btn btn-link position-absolute" 
                         style={{right:'0rem',top:'0.5rem',fontSize:'0.8rem'}}
-                        onClick={()=>this.props.history.push('/signup')}>注册账户</button>
+                        onClick={()=>{
+                            $.ajax({
+                                url:'/api/adminCheck',
+                            }).then(()=>{
+                                this.props.history.push('/signup')
+                            }).catch((err)=>alert('注册错误，请联系管理员',err))
+                        }}>注册账户</button>
                 </div>
 
             </form>

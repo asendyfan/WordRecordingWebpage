@@ -1,12 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import $ from 'jquery';
-import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal, Popconfirm, Dropdown, Menu, Select, Tooltip, List } from 'antd';
+import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal, Popconfirm, Dropdown, Menu, Select, Tooltip, List, Form } from 'antd';
 import {getCookie} from '../../utils/get-cookie'
 import '../../../css/word-record-table.css'
 import Highlighter from 'react-highlight-words';
 import TableFilter from './TableFilter';
 import eventProxy from '../../utils/event-proxy';
 import SideMenu from './SideMenu';
+import WrappedAddWordFormModal from './AddWordForm';
 
 class WordTable extends React.Component {
 
@@ -350,11 +352,24 @@ export default class WordRecord extends React.Component {
 
     state={
         words:[],
-        searchResult:[]
+        searchResult:[],
     }
 
     componentWillMount(){
         this.getWord()
+        eventProxy.on('classifications',(classifications)=>this.classifications = classifications)
+    }
+
+    getChildContext(){
+        return {
+            onSetWord: this.setWord,
+            onGetWord: this.setWord,
+            ongetClassifications: this.getClassifications,
+        }
+    }
+
+    getClassifications=()=>{
+        return this.classifications
     }
 
     getWord = ()=>{
@@ -366,7 +381,7 @@ export default class WordRecord extends React.Component {
     }
 
     setWord=(data)=>{
-        $.ajax({
+        return $.ajax({
             url:'api/wordRecords/setword',
             data:data
         }).then(()=>{
@@ -460,7 +475,8 @@ export default class WordRecord extends React.Component {
                             </div>
                             <div className='position-absolute w-100 text-center' style={{top:'0px'}}>
                                 <div className=' d-inline-block position-relative'  >
-                                    <Button type="primary">添加单词</Button>
+                                    <Button type="primary" onClick={()=>this.WrappedAddWordFormModal.modalVisible()}>添加单词</Button>
+                                    <WrappedAddWordFormModal ref={ele=>this.WrappedAddWordFormModal = ele}/>
                                 </div>
                             </div>
                         </div>
@@ -474,4 +490,10 @@ export default class WordRecord extends React.Component {
             </Layout>
         )
     }
+}
+
+WordRecord.childContextTypes = {
+    onSetWord: PropTypes.func,
+    onGetWord: PropTypes.func,
+    ongetClassifications: PropTypes.func,
 }

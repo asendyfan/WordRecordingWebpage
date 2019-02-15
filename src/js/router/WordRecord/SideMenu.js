@@ -43,6 +43,14 @@ class SideMenu extends React.Component{
         })
     }
 
+    onSearchWord= async ()=>{
+        const {searchWord} = this.state
+        let translateResult = await getTranslateResultThroughWord(searchWord)
+        if(!translateResult)return 
+        translateResult.word = searchWord.trim()
+        translateResult && this.setState({translateResult})
+    }
+
     render(){
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
         return (
@@ -73,17 +81,17 @@ class SideMenu extends React.Component{
                             <Input.Search 
                                 placeholder='search' 
                                 className='px-2 mb-2'
+                                allowClear
                                 onFocus={()=>noSearching && this.setState({noSearching:false})}
+                                onSearch={this.onSearchWord}
                                 onChange={(e)=>this.setState({searchWord:e.target.value})}/>}
                             {!collapsed && 
                             <Button 
                                 className='mx-2 mb-2' 
                                 type='primary' 
-                                onClick={async (e)=>{
-                                    let translateResult = await getTranslateResultThroughWord(this.state.searchWord, e)
-                                    if(!translateResult)return 
-                                    translateResult.word = searchWord.trim()
-                                    translateResult && this.setState({translateResult})
+                                onClick={(e)=>{
+                                    e.preventDefault()
+                                    this.onSearchWord()
                                 }}>翻译</Button>}
                             <div className={`${!collapsed && Object.keys(translateResult).length?'visible':'invisible'} text-white`}>    
                                 <OnlineTranslation translateResult={translateResult}/>

@@ -1,5 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'antd';
 export default class OnlineTranslation extends React.Component {
+    static contextTypes = {
+        onSetWord: PropTypes.func,
+        onGetWord: PropTypes.func
+    }
     render() {
         const { translateResult } = this.props
         return (
@@ -14,6 +20,17 @@ export default class OnlineTranslation extends React.Component {
                             </ul>
                         </div>
                     </div>}
+                <div className='d-flex justify-content-center'>
+                    <Button type='primary' onClick={(e)=>{
+                        const data = {
+                            word:translateResult.word,
+                            phonetic:translateResult.phonetic,
+                            translate:translateResult.explains.length?translateResult.explains.join('\n'):translateResult.translations[0],
+                            classifications:'',
+                        }
+                        this.context.onSetWord(data)
+                    }} >添加到单词表</Button>
+                </div>
             </div>)
     }
 }

@@ -60,7 +60,7 @@ export default class ShowClassificationsModal extends React.Component {
 
     render(){
         const {modalVisable, thisClassifiction, addTagValue} = this.state;
-        console.log('render modal','visialbe',modalVisable,thisClassifiction)
+        // console.log('render modal','visialbe',modalVisable,thisClassifiction)
         return (
             <div>
                 <Modal
@@ -94,7 +94,7 @@ export default class ShowClassificationsModal extends React.Component {
         const {thisClassifiction} = this.state;
         //初始化，标签的显示
         if((thisClassifiction.length ===0 && classifications.length)){
-            console.log(thisClassifiction, classifications)
+            // console.log(thisClassifiction, classifications)
             const tagVisible = classifications.reduce((pre, cur)=>{
                 pre[cur+'TagVisible'] = true
                 return pre
