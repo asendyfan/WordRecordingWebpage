@@ -9,7 +9,7 @@ export default class ClassificationsSelect extends React.Component{
     }
     state={
         specifiedClassifications:[],
-        classifications:this.context.ongetClassifications()
+        classifications:(this.context.ongetClassifications && this.context.ongetClassifications()) || (this.props.classifications ? this.props.classifications:[])
     }
     componentDidMount(){
         eventProxy.on('classifications',(classifications)=>this.setState({classifications}))
@@ -28,8 +28,9 @@ export default class ClassificationsSelect extends React.Component{
                     mode='multiple'
                     onChange={(values)=>this.setState({specifiedClassifications:values.filter(classification=>classification!=='新分类')})}
                     value={specifiedClassifications}
+                    style={{width:'100%'}}
                 >
-                    {classifications.map(classification => 
+                    {classifications && classifications.length && classifications[0] && classifications.map(classification => 
                         <Select.Option key={classification}>
                             {classification}
                         </Select.Option>

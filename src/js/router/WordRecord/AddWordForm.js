@@ -36,7 +36,8 @@ class VerticalAddWordForm extends React.Component {
                 }
                 // console.log(data)
                 this.context.onSetWord(data)
-                    .then(()=>{
+                    .then((data)=>{
+                        // console.log(data)
                         alert('添加成功')
                         this.props.modalInvisible()
                     })
@@ -65,7 +66,7 @@ class VerticalAddWordForm extends React.Component {
                         rules: [{ required: true, message: '请输入单词！' }],
                     })(
                         // <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
-                        <Input />
+                        <Input AUTOCOMPLETE="off"/>
                     )}
                 </Form.Item>
                 <Form.Item
@@ -79,7 +80,7 @@ class VerticalAddWordForm extends React.Component {
                         rules: [{ required: true, message: '请输入翻译！' }],
                     })(
                         // <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
-                        <Input />
+                        <Input AUTOCOMPLETE="off"/>
                     )}
                 </Form.Item>
                 <Form.Item

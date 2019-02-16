@@ -9,6 +9,7 @@ import TableFilter from './TableFilter';
 import eventProxy from '../../utils/event-proxy';
 import SideMenu from './SideMenu';
 import WrappedAddWordFormModal from './AddWordForm';
+import ClassificationsSelect from './ClassificationsSelect';
 
 class WordTable extends React.Component {
 
@@ -156,17 +157,7 @@ class WordTable extends React.Component {
         Modal.confirm({
             title:'单词分类编辑',
             icon:<Icon className='text-primary' type="info-circle" />,
-            content:<Select
-                mode='multiple'
-                defaultValue={record.classifications?record.classifications.split(',').map(classification=>record.key+classification):[]}
-                style={{width:'100%'}}
-                onChange={(value)=>specifiedClassifications=value.join(',').replace(new RegExp(record.key,'g'),'')}>
-                {this.classifications.map(classification=>(
-                    <Select.Option key={record.key+classification}>
-                        {classification}
-                    </Select.Option>
-                ))}
-            </Select>,
+            content:<ClassificationsSelect classifications={this.classifications} />,
             onOk:()=>this.props.setWord({word:record.word,classifications:specifiedClassifications})
         })
     }
@@ -229,8 +220,6 @@ class WordTable extends React.Component {
                 render:(text, record)=>this.isEditing(record)?<Input style={{width:'9rem'}} defaultValue={text} ref={(ele)=>this.editWordElement=ele}/>:text,
                 onCell:(record, rowIndex)=>({
                     record,
-                    inputType:'number',
-                    editing:this.isEditing(record)
                 })
             },
             {
@@ -299,7 +288,7 @@ class WordTable extends React.Component {
                             if(index>2)return
                             if(index === 0)return <span key={value}>{value}<br/></span>
                             if(index === 1) return <span key={value}>{value}</span>
-                            if(index === 2) return <span>.....</span>
+                            if(index === 2) return <span key='...'>.....</span>
                         })}
                     </Tooltip>,
             },
@@ -386,7 +375,13 @@ export default class WordRecord extends React.Component {
             data:data
         }).then(()=>{
             this.getWord()
-        }).catch(err=>console.error(err))
+        }).catch(err=>{
+            console.error(err);
+            if(err.status==403){
+                alert('请先登录')
+                throw new Error(403)
+            }
+        })
     }
 
     deleteWordByOperation = (needDeleteWord)=>{

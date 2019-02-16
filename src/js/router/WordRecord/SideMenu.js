@@ -92,7 +92,7 @@ class SideMenu extends React.Component{
                                 onClick={(e)=>{
                                     e.preventDefault()
                                     this.onSearchWord()
-                                }}>翻译</Button>}
+                                }}>在线翻译</Button>}
                             <div className={`${!collapsed && Object.keys(translateResult).length?'visible':'invisible'} text-white`}>    
                                 <OnlineTranslation translateResult={translateResult}/>
                             </div>

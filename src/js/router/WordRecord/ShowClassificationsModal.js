@@ -2,6 +2,7 @@ import React from 'react';
 import {Modal, Tag} from 'antd';
 import $ from 'jquery';
 import _ from 'lodash';
+import eventProxy from '../../utils/event-proxy';
 /**
  *
  *
@@ -15,7 +16,7 @@ export default class ShowClassificationsModal extends React.Component {
 
     state={
         modalVisable : false,   //控制modal的显示
-        thisClassifiction:[],
+        thisClassifiction:this.props.classifications,
     }
 
     setModalVisable(modalVisable){
@@ -42,7 +43,7 @@ export default class ShowClassificationsModal extends React.Component {
         const {setClassificationOk} = this.props
         const {thisClassifiction} = this.state
         this.totalClassifiction = thisClassifiction.join(',');
-        // console.log(thisClassifiction,this.totalClassifiction)
+        console.log(thisClassifiction,this.totalClassifiction)
         $.ajax({
             method:'GET',
             url:'/api/wordRecords/setClassification',
@@ -51,6 +52,9 @@ export default class ShowClassificationsModal extends React.Component {
         .then(()=>setClassificationOk())
         .then(()=>this.clearEdit())
         .catch(err=>alert('更新失败'+err))
+    }
+    componentDidMount(){
+        eventProxy.on('classifications',(thisClassifiction)=>this.setState({thisClassifiction}))
     }
 
     shouldComponentUpdate(nextProps, nextState){
@@ -89,17 +93,4 @@ export default class ShowClassificationsModal extends React.Component {
         )
     }
 
-    componentDidUpdate(){
-        const {classifications} = this.props;
-        const {thisClassifiction} = this.state;
-        //初始化，标签的显示
-        if((thisClassifiction.length ===0 && classifications.length)){
-            // console.log(thisClassifiction, classifications)
-            const tagVisible = classifications.reduce((pre, cur)=>{
-                pre[cur+'TagVisible'] = true
-                return pre
-            },{})
-            this.setState({thisClassifiction:_.cloneDeep(classifications),...tagVisible})
-        }   
-    }
 }

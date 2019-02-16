@@ -47,7 +47,7 @@ class TableFilter extends React.Component{
             method:'GET',
             url:'/api/wordRecords/getClassification',
         }).catch(err=>{console.error('get classification error',err);alert('没有权限')})
-        // console.log(data)
+        // console.log('table filter', data)
         this.setState({classifications:data?data.split(','):[]})
         eventProxy.trigger('classifications',data?data.split(','):[])
     }
@@ -56,7 +56,7 @@ class TableFilter extends React.Component{
         $.ajax({
             url:'/api/wordRecords/getClassification'            
         }).then(data=>{
-            const classifications = data.split(',')
+            const classifications = data?data.split(','):[]
             this.setState({classifications})
             eventProxy.trigger('classifications',classifications)//有哪些分类
         }).catch(err=>console.error(err))
