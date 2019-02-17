@@ -152,13 +152,15 @@ class WordTable extends React.Component {
         this.setState({editingKey:key})
     }
     editClassifications = (record)=>{
-        let specifiedClassifications = []
         console.log((record))
         Modal.confirm({
             title:'单词分类编辑',
             icon:<Icon className='text-primary' type="info-circle" />,
-            content:<ClassificationsSelect classifications={this.classifications} />,
-            onOk:()=>this.props.setWord({word:record.word,classifications:specifiedClassifications})
+            content:<ClassificationsSelect 
+                defaultValue={record.classifications.split(',')}
+                classifications={this.classifications} 
+                ref={(ele)=>this.ClassificationsSelect = ele}/>,
+            onOk:()=>this.props.setWord({word:record.word,classifications:this.ClassificationsSelect.getSpecifiedClassifications()})
         })
     }
 
@@ -257,25 +259,6 @@ class WordTable extends React.Component {
                 dataIndex:'phonetic',
                 align:'center'
             },
-            // {
-            //     title: '词性',
-            //     dataIndex: 'wordClass',
-            //     filters: [{
-            //         text: 'n.',
-            //         value: 'n.'
-            //     }, {
-            //         text: 'v.',
-            //         value: 'v.'
-            //     }, {
-            //         text: 'adj.',
-            //         value: 'adj.'
-            //     }, {
-            //         text: 'adv.',
-            //         value: 'adv.'
-            //     }],
-            //     onFilter: (value, record) => record.wordClass === value,
-            //     align: 'center',
-            // },
             {
                 title: ()=><div>翻译<Icon type={isTotalTransVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
                 dataIndex: 'translate',

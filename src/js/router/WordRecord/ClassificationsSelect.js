@@ -8,20 +8,20 @@ export default class ClassificationsSelect extends React.Component{
         ongetClassifications: PropTypes.func
     }
     state={
-        specifiedClassifications:[],
+        specifiedClassifications:(this.props.defaultValue && this.props.defaultValue[0])?this.props.defaultValue:[],
         classifications:(this.context.ongetClassifications && this.context.ongetClassifications()) || (this.props.classifications ? this.props.classifications:[])
     }
     componentDidMount(){
         eventProxy.on('classifications',(classifications)=>this.setState({classifications}))
     }
 
-    getValue=()=>{
-        return this.state.classifications.join(',');
+    getSpecifiedClassifications=()=>{
+        return this.state.specifiedClassifications.join(',');
     }
 
     render() {
         const {specifiedClassifications, classifications} = this.state
-        // console.log(classifications)
+        console.log(classifications)
         return (
             <div>
                 <Select

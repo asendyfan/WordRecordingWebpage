@@ -32,7 +32,7 @@ class VerticalAddWordForm extends React.Component {
                 const data = {
                     word:values.wordName,
                     translate:values.translate,
-                    classifications:this.ClassificationsSelect.getValue()
+                    classifications:this.ClassificationsSelect.getSpecifiedClassifications()
                 }
                 // console.log(data)
                 this.context.onSetWord(data)
