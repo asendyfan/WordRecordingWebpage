@@ -239,6 +239,21 @@ module.exports = function(webpackEnv) {
         chunks: 'all',
         name: false,
       },
+      // splitChunks: {
+      //   chunks: 'all', // 默认 async 可选值 all 和 initial            
+      //   maxInitialRequests: Infinity, // 一个入口最大的并行请求数            
+      //   minSize: 10240, // 避免模块体积过小而被忽略            
+      //   minChunks: 1, // 默认也是一表示最小引用次数            
+      //   cacheGroups: {
+      //     vendor: {
+      //       test: /[\\/]node_modules[\\/]/, // 如果需要的依赖特别小，可以直接设置成需要打包的依赖名称                    
+      //       name(module, chunks, chcheGroupKey) { // 可提供布尔值、字符串和函数，如果是函数，可编写自定义返回值                        
+      //         const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1] // 获取模块名称
+      //         return `npm.${packageName.replace('@', '')}` // 可选，一般情况下不需要将模块名称 @ 符号去除                   
+      //       }
+      //     }
+      //   }
+      // },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       runtimeChunk: true,
@@ -276,6 +291,7 @@ module.exports = function(webpackEnv) {
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
         new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+        // new webpack.HashedModuleIdsPlugin()
       ],
     },
     resolveLoader: {

@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Modal, Tag} from 'antd';
 import $ from 'jquery';
-import _ from 'lodash';
 import eventProxy from '../../utils/event-proxy';
 /**
  *
@@ -13,6 +13,10 @@ import eventProxy from '../../utils/event-proxy';
  * @props [Function] setClassificationOk  分类设置完成后的回填
  */
 export default class ShowClassificationsModal extends React.Component {
+    static contextTypes = {
+        onSetWord: PropTypes.func,
+        onGetWord: PropTypes.func
+    }
 
     state={
         modalVisable : false,   //控制modal的显示
@@ -36,7 +40,7 @@ export default class ShowClassificationsModal extends React.Component {
     }
 
     clearEdit=()=>{
-        this.setState({thisClassifiction:[],addTagValue:''})
+        this.setState({thisClassifiction:this.props.classifications,addTagValue:''})
     }
 
     saveFun(){
@@ -49,6 +53,7 @@ export default class ShowClassificationsModal extends React.Component {
             url:'/api/wordRecords/setClassification',
             data:{classifications:this.totalClassifiction}
         })
+        .then(data=>data.needreGetWord && this.context.onGetWord())
         .then(()=>setClassificationOk())
         .then(()=>this.clearEdit())
         .catch(err=>alert('更新失败'+err))

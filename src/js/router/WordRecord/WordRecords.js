@@ -264,16 +264,16 @@ class WordTable extends React.Component {
                 dataIndex: 'translate',
                 align: 'left',
                 className:'column-max-width showEllipsis',
-                render:(text, record)=>this.isEditing(record)?
+                render:(text, record)=>{console.log(text);return this.isEditing(record)?
                     <Input.TextArea defaultValue={text} autosize={{minRows:1, maxRows:6}} ref={(ele)=>this.editTranslateElement=ele}/>:
-                    <Tooltip placement="bottom" title={<List size='small' style={{color:'white'}} dataSource={text.split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
-                        {text.split('\n').map((value, index, array)=>{
+                    <Tooltip placement="bottom" title={<List size='small' style={{color:'white'}} dataSource={text && text.toString().split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
+                        {text && text.toString().split('\n').map((value, index, array)=>{
                             if(index>2)return
                             if(index === 0)return <span key={value}>{value}<br/></span>
                             if(index === 1) return <span key={value}>{value}</span>
                             if(index === 2) return <span key='...'>.....</span>
                         })}
-                    </Tooltip>,
+                    </Tooltip>},
             },
             {
                 title:'记录日期',
@@ -335,7 +335,7 @@ export default class WordRecord extends React.Component {
     getChildContext(){
         return {
             onSetWord: this.setWord,
-            onGetWord: this.setWord,
+            onGetWord: this.getWord,
             ongetClassifications: this.getClassifications,
         }
     }
@@ -350,6 +350,10 @@ export default class WordRecord extends React.Component {
         }).then(data=>{
             this.setState({words:data})
         }).catch(err=>console.error(err))
+    }
+
+    wordSetState = (words)=>{
+        this.setState(words)
     }
 
     setWord=(data)=>{
