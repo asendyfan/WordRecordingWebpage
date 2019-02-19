@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import * as serviceWorker from './serviceWorker';
-import Home from './js/router/Home';
 import SignIn from './js/router/SignIn';
-import WordRecords from './js/router/WordRecord/WordRecords';
-import SetWords from './js/router/WordRecord/SetWords';
+import WordRecords from './js/router/WordRecords';
+// import SetWords from './js/router/WordRecord/SetWords';
 import SignUp from './js/router/SignUp';
 import Forbidden from './js/router/Forbidden';
 import Setting from './js/router/Setting';
@@ -18,13 +17,12 @@ import './css/index.css';
 
 ReactDOM.render(<Router>
     <div>
-        <Route exact path="/" component={Home}></Route>
+        <Route exact path='/' component={WordRecords}></Route>
         <Route path='/signin' component={SignIn}></Route>
-        <Route path='/WordRecords' component={WordRecords}></Route>
         <Route path='/signup' component={SignUp}></Route>
         {/* <Route path='/setting' render={()=>getCookie('settingPage').includes('settings')?<Setting/>:<Redirect to='/forbidden'></Redirect>}></Route> */}
         <Route path='/setting' component={Setting}/>
-        <Route path='/setWords' component={SetWords}/>
+        {/* <Route path='/setWords' component={SetWords}/> */}
         {/* <Route path='/setWords' render={()=>getCookie('settingPage').includes('setWords')?<SetWords/>:<Redirect to='/forbidden'></Redirect>}></Route> */}
         <Route path='/forbidden' component={Forbidden}></Route>
     </div>

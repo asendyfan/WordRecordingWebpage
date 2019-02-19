@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Modal, Tag} from 'antd';
 import $ from 'jquery';
-import eventProxy from '../../utils/event-proxy';
+import eventProxy from '../utils/event-proxy';
 /**
  *
  *

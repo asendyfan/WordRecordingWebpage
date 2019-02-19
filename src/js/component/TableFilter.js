@@ -1,5 +1,5 @@
 import React from 'react';
-import eventProxy from '../../utils/event-proxy';
+import eventProxy from '../utils/event-proxy';
 import $ from 'jquery';
 import { Select, Modal, Icon } from 'antd';
 import ShowClassificationsModal from './ShowClassificationsModal';

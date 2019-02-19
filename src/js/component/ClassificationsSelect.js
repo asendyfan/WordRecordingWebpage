@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select, Icon } from 'antd';
 import PropTypes from 'prop-types'
-import eventProxy from '../../utils/event-proxy';
+import eventProxy from '../utils/event-proxy';
 import ShowClassificationsModal from './ShowClassificationsModal';
 export default class ClassificationsSelect extends React.Component{
     static contextTypes = {

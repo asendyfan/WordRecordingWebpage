@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal, Popconfirm, Dropdown, Menu, Select, Tooltip, List, Form } from 'antd';
-import {getCookie} from '../../utils/get-cookie'
-import '../../../css/word-record-table.css'
+import {getCookie} from '../utils/get-cookie'
 import Highlighter from 'react-highlight-words';
-import TableFilter from './TableFilter';
-import eventProxy from '../../utils/event-proxy';
-import SideMenu from './SideMenu';
-import WrappedAddWordFormModal from './AddWordForm';
-import ClassificationsSelect from './ClassificationsSelect';
+import TableFilter from '../component/TableFilter';
+import eventProxy from '../utils/event-proxy';
+import SideMenu from '../component/SideMenu';
+import WrappedAddWordFormModal from '../component/AddWordForm';
+import ClassificationsSelect from '../component/ClassificationsSelect';
 
 class WordTable extends React.Component {
 
@@ -404,7 +403,7 @@ export default class WordRecord extends React.Component {
             Modal.success({
                 title:'单词删除',
                 content:'删除成功',
-                onOk:()=>{console.log('删除成功',words);this.setState({words})}
+                onOk:()=>{console.log('删除成功',words);this.setState({words});this.WordTableElement.needDeleteWord =[]}
             })
         }).catch(err=>{
             Modal.error({
