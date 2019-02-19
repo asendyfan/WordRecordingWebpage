@@ -1,4 +1,4 @@
-网站预览：[www.pengyangfan.top](http://www.pengyangfan.top/WordRecords)
+网站预览：[www.pengyangfan.top](http://www.pengyangfan.top/)
 
 ## 心得 ##
 
@@ -31,6 +31,7 @@
 - window
     1. 刷新当前页面 bForceGet 默认值为false，意思为从缓冲读取当前页面，true时从服务器读取最新页面 `window.location.reload([bForceGet])`
     1. 返回浏览过的指定页面 （返回上一页）`window.history.go(-1)`
+    1. 离开页面前监听的事件：`window.onbeforeunload`
 - dom
     1. 阻止事件的冒泡或捕获：`event.stopPropagation(); `
     1. 阻止该事件以外的其它所有事件（比如捕获、冒泡，以及监听该dom的其他事件：`event.stopImmediatePropagation();`

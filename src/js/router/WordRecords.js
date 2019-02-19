@@ -17,6 +17,16 @@ class WordTable extends React.Component {
             this.setState({wordsType})
         })
         eventProxy.on('classifications',(classifications)=>this.classifications = classifications)
+        window.onbeforeunload = ()=>{
+            // console.log('changeStarNum', this.changeStarNum,Object.keys(this.changeStarNum))
+            if(Object.keys(this.changeStarNum).length>0){
+                $.ajax({
+                    method:'POST',
+                    url:'api/wordRecords/setStars',
+                    data:{changeStarNum:JSON.stringify(this.changeStarNum)}
+                })
+            }
+        }
     }
 
     state = {
@@ -204,6 +214,7 @@ class WordTable extends React.Component {
             }
         })
     }
+    changeStarNum={}
 
     buildTable(){
         const {wordsType, isTotalTransVisible, selectedRowKeys, isTotalWordVisible} = this.state
@@ -226,8 +237,11 @@ class WordTable extends React.Component {
             {
                 title:'熟练度',
                 dataIndex: 'starsNum',
-                render: (value, row, index) => <Rate allowHalf disabled value={value} />,
-                sorter: (a, b) => a > b ? 1 : -1,
+                render: (value, row, index) => <Rate defaultValue={value} onChange={(starNums)=>{this.changeStarNum[row.word] = starNums}} allowClear={true} />,
+                sorter: (a, b) => {
+                    const aNum = this.changeStarNum[a.word]?this.changeStarNum[a.word]:a.starsNum
+                    const bNum = this.changeStarNum[b.word]?this.changeStarNum[b.word]:b.starsNum
+                    return aNum > bNum ? 1 : -1},
                 filters: [
                     {
                         text: '1星',
@@ -250,7 +264,7 @@ class WordTable extends React.Component {
                         value: 5
                     },
                 ],
-                onFilter: (value, record) => record.starsNum === Number(value),
+                onFilter: (value, record) => this.changeStarNum[record.word]?this.changeStarNum[record.word]:record.starsNum === Number(value),
                 align: 'center',
             },
             {
@@ -263,7 +277,7 @@ class WordTable extends React.Component {
                 dataIndex: 'translate',
                 align: 'left',
                 className:'column-max-width showEllipsis',
-                render:(text, record)=>{console.log(text);return this.isEditing(record)?
+                render:(text, record)=>{return this.isEditing(record)?
                     <Input.TextArea defaultValue={text} autosize={{minRows:1, maxRows:6}} ref={(ele)=>this.editTranslateElement=ele}/>:
                     <Tooltip placement="bottom" title={<List size='small' style={{color:'white'}} dataSource={text && text.toString().split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
                         {text && text.toString().split('\n').map((value, index, array)=>{
@@ -347,6 +361,10 @@ export default class WordRecord extends React.Component {
         $.ajax({
             url:'/api/wordRecords/getwords'            
         }).then(data=>{
+            // this.wordsStarNum = data.reduce(preObj, curWord=>{
+            //     preObj[word.word] = word.starsNum
+            //     return preObj
+            // },{})
             this.setState({words:data})
         }).catch(err=>console.error(err))
     }
@@ -437,7 +455,6 @@ export default class WordRecord extends React.Component {
             <Layout className='route-min-height'>
                 <SideMenu history={this.props.history}/>
                 <Layout>
-                    {/* <MyNavBars/> */}
                     <div className='page-max-width mx-xl-5 mx-md-3 mx-1 mt-5'>
                         <div className='position-relative mt-3'>
                             <div className='d-flex justify-content-between mb-3'>
