@@ -21,7 +21,7 @@ export default class ClassificationsSelect extends React.Component{
 
     render() {
         const {specifiedClassifications, classifications} = this.state
-        console.log(classifications)
+        // console.log(classifications)
         return (
             <div>
                 <Select

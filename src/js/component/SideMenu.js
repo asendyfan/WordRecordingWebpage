@@ -54,7 +54,7 @@ class SideMenu extends React.Component{
     render(){
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
         return (
-            <div onMouseOver={this.onpenSideMenu} style={{backgroundColor:'rgb(0,21,41)'}} >
+            <div onMouseOver={this.onpenSideMenu} style={{backgroundColor:'rgb(0,21,41)',position:'relative'}} >
                     <Sider
                         collapsed={collapsed}
                         onCollapse={this.onCollapse}
@@ -93,13 +93,13 @@ class SideMenu extends React.Component{
                                     e.preventDefault()
                                     this.onSearchWord()
                                 }}>在线翻译</Button>}
-                            <div className={`${!collapsed && Object.keys(translateResult).length?'visible':'invisible'} text-white`}>    
+                            {!collapsed && Object.keys(translateResult).length && <div className={`text-white`}>    
                                 <OnlineTranslation translateResult={translateResult}/>
-                            </div>
+                            </div>}
                         </div>
                     </Sider>  
                     <div className='text-white d-flex mx-auto justify-content-center' 
-                        style={{position:'relative',bottom:'3rem',width:!collapsed?'200px':'80px',cursor:'pointer'}}
+                        style={{position:'absolute',bottom:'3.5rem',width:!collapsed?'200px':'80px',cursor:'pointer'}}
                         onClick={this.signInOrOut}>
                         {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}</span>}<embed src={this.user?signout:signin} style={{width:'1.5rem'}}/>  
                     </div>    

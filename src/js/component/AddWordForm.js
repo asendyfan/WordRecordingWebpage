@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {
-    Form, Input, Button, Modal,
+    Form, Input, Button, Modal, message,
 } from 'antd';
 import ClassificationsSelect from './ClassificationsSelect';
 
@@ -25,6 +25,7 @@ class VerticalAddWordForm extends React.Component {
     }
 
     handleSubmit = (e) => {
+        const {setFieldsValue} = this.props.form
         e.preventDefault();
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
@@ -38,7 +39,8 @@ class VerticalAddWordForm extends React.Component {
                 this.context.onSetWord(data)
                     .then((data)=>{
                         // console.log(data)
-                        alert('添加成功')
+                        setFieldsValue({'wordName':'','translate':''})
+                        message.success('添加成功')
                         this.props.modalInvisible()
                     })
             }

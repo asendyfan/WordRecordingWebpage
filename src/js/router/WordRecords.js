@@ -264,7 +264,7 @@ class WordTable extends React.Component {
                         value: 5
                     },
                 ],
-                onFilter: (value, record) => this.changeStarNum[record.word]?this.changeStarNum[record.word]:record.starsNum === Number(value),
+                onFilter: (value, record) =>(this.changeStarNum[record.word]?this.changeStarNum[record.word]:record.starsNum) === Number(value),
                 align: 'center',
             },
             {
@@ -279,7 +279,7 @@ class WordTable extends React.Component {
                 className:'column-max-width showEllipsis',
                 render:(text, record)=>{return this.isEditing(record)?
                     <Input.TextArea defaultValue={text} autosize={{minRows:1, maxRows:6}} ref={(ele)=>this.editTranslateElement=ele}/>:
-                    <Tooltip placement="bottom" title={<List size='small' style={{color:'white'}} dataSource={text && text.toString().split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
+                    <Tooltip placement="top" title={<List size='small' style={{color:'white'}} dataSource={text && text.toString().split('\n')} renderItem={item=>(<List.Item>{item}</List.Item>)}/>}>
                         {text && text.toString().split('\n').map((value, index, array)=>{
                             if(index>2)return
                             if(index === 0)return <span key={value}>{value}<br/></span>
@@ -326,7 +326,7 @@ class WordTable extends React.Component {
 
     render() {
         return (
-            <div className='page-max-width'>
+            <div>
                 {this.buildTable()}
             </div>
         )
@@ -382,7 +382,10 @@ export default class WordRecord extends React.Component {
         }).catch(err=>{
             console.error(err);
             if(err.status==403){
-                alert('请先登录')
+                Modal.error({
+                    title:'无效权限',
+                    content:'请先登录'
+                })
                 throw new Error(403)
             }
         })
@@ -424,7 +427,13 @@ export default class WordRecord extends React.Component {
                 onOk:()=>{console.log('删除成功',words);this.setState({words});this.WordTableElement.needDeleteWord =[]}
             })
         }).catch(err=>{
-            Modal.error({
+            if(err.status===403){
+                Modal.error({
+                    title:'无效权限',
+                    content:'请先登录'
+                })
+            }
+            else Modal.error({
                 title:'删除失败',
                 content:'error:'+JSON.stringify(err),
             })
@@ -455,7 +464,7 @@ export default class WordRecord extends React.Component {
             <Layout className='route-min-height'>
                 <SideMenu history={this.props.history}/>
                 <Layout>
-                    <div className='page-max-width mx-xl-5 mx-md-3 mx-1 mt-5'>
+                    <div className='mx-xl-5 mx-md-3 mx-1 mt-5'>
                         <div className='position-relative mt-3'>
                             <div className='d-flex justify-content-between mb-3'>
                                 <TableFilter style={{zIndex:'100'}} {...{wordClassifications}} />                  
