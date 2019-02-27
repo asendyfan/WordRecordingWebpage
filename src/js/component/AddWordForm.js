@@ -33,13 +33,14 @@ class VerticalAddWordForm extends React.Component {
                 const data = {
                     word:values.wordName,
                     translate:values.translate,
+                    phonetic:values.phonetic,
                     classifications:this.ClassificationsSelect.getSpecifiedClassifications()
                 }
                 // console.log(data)
                 this.context.onSetWord(data)
                     .then((data)=>{
                         // console.log(data)
-                        setFieldsValue({'wordName':'','translate':''})
+                        setFieldsValue({'wordName':'','translate':'','phonetic':''})
                         message.success('添加成功')
                         this.props.modalInvisible()
                     })
@@ -68,6 +69,19 @@ class VerticalAddWordForm extends React.Component {
                         rules: [{ required: true, message: '请输入单词！' }],
                     })(
                         // <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                        <Input AUTOCOMPLETE="off"/>
+                    )}
+                </Form.Item>
+                <Form.Item
+                    className='d-flex justify-content-center'
+                    label='发音'
+                    {...formItemLayout}
+                    validateStatus={wordNameError ? 'error' : ''}
+                    help={wordNameError || ''}
+                >
+                    {getFieldDecorator('phonetic', {
+                        rules: [{ required: false}],
+                    })(
                         <Input AUTOCOMPLETE="off"/>
                     )}
                 </Form.Item>

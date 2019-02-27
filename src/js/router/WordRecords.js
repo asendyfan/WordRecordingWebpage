@@ -198,7 +198,11 @@ class WordTable extends React.Component {
                         {editable?(
                             <span>
                                 <a className='text-primary mr-2' href='javascript:;' onClick={()=>{
-                                    this.save({word:this.editWordElement.state.value.trim(),translate:this.editTranslateElement.textAreaRef.value.trim()})
+                                    this.save({
+                                        word:this.editWordElement.state.value.trim(),
+                                        phonetic:this.editPhoneticElement.state.value.trim(),
+                                        translate:this.editTranslateElement.textAreaRef.value.trim(),
+                                    })
                                     }}>保存</a>
                                 <Popconfirm
                                     title='您确定取消吗？'
@@ -270,7 +274,8 @@ class WordTable extends React.Component {
             {
                 title:'发音',
                 dataIndex:'phonetic',
-                align:'center'
+                align:'center',
+                render:(text, record)=>this.isEditing(record)?<Input style={{width:'11rem'}} defaultValue = {text} ref={ele=>this.editPhoneticElement = ele}/>:text,
             },
             {
                 title: ()=><div>翻译<Icon type={isTotalTransVisible ?"eye":"eye-invisible"} className='ml-1' style={{cursor:'pointer'}} onClick={()=>this.handleTranslateColumnVisible()}/></div>,
