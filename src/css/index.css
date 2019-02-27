@@ -59,3 +59,13 @@ code {
 .column-max-width{
   max-width: 12rem;
 }
+
+/* 调节表格默认排序的样式 */
+.ant-table-thead > tr > th.ant-table-column-sort{
+  background-color:#fafafa;
+}
+.ant-table-tbody > tr > td.ant-table-column-sort{
+  /* background-color:rgb(230, 247, 255); */
+  /* background-color: grey; */
+  background-color: rgba(0, 0, 0, 0);
+}
