@@ -41,11 +41,19 @@ code {
   margin-right: 0.1rem;
 }
 
-@media screen and (min-width:721px ){
+/* @media screen and (min-width:721px ){
   .page-max-width{
-      max-width: 80rem;
+    max-width: 900px;
+  }
+} */
+@media screen and (min-width:1200px){
+  .page-max-width{
+    min-width: 1200px;
+    width: 90%;
+    max-width: 1500px;
   }
 }
+
 
 .showEllipsis{
   /* 保证文本内容不会自动换行，如果多余的内容会在水平方向撑破单元格。 */
@@ -68,4 +76,25 @@ code {
   /* background-color:rgb(230, 247, 255); */
   /* background-color: grey; */
   background-color: rgba(0, 0, 0, 0);
+}
+
+/* sidemenu中search框的logo微调 */
+#sideContent .ant-input-suffix{
+  right: 1.2rem;
+}
+
+#translateButton{
+  background-color: #ffa500;
+  border-color:#ffa500;
+  color:#fff;
+}
+#translateButton:hover{
+  color:#fff;
+  background-color:#ffc125;
+  border-color:#ffc125;
+}
+
+#loginOrLogoutButton:hover{
+  background-color: #d6dee6;
+  color:#003366 !important;
 }

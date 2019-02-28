@@ -11,7 +11,7 @@ const {Sider} = Layout
 
 class SideMenu extends React.Component{
     state ={
-        collapsed:true,
+        collapsed:false,
         noSearching:true,
         translateResult:{},
         searchWord:''
@@ -54,21 +54,25 @@ class SideMenu extends React.Component{
     render(){
         const {collapsed,noSearching, translateResult, searchWord} = this.state;
         return (
-            <div onMouseOver={this.onpenSideMenu} style={{backgroundColor:'rgb(0,21,41)',position:'relative'}} >
+            // <div onMouseOver={this.onpenSideMenu} className='float-left ' style={{backgroundColor:'#003366'}} >
                     <Sider
+                        width = {230}
+                        collapsedWidth={70}
+                        style={{backgroundColor:'#003366'}}
                         collapsed={collapsed}
                         onCollapse={this.onCollapse}
                         className='route-min-height'
-                        onMouseLeave={()=>noSearching && this.setState({collapsed:true})}
+                        // onMouseOver={this.onpenSideMenu}
+                        // onMouseLeave={()=>noSearching && this.setState({collapsed:true})}
                     >
-                        <div className='d-flex  text-center justify-content-center  flex-column'>
-                            <div className={`text-white hover-pointer ${collapsed?'invisible':'visible'}`}>
+                        <div className='d-flex  text-center justify-content-center  flex-column position-fixed' style={{width:collapsed?70:230}} id='sideContent'>
+                            {/* <div className={`text-white hover-pointer ${collapsed?'invisible':'visible'}`}>
                                 <Icon 
                                     className='mr-1 mt-2'
                                     type="shrink" 
                                     style={{float:'right', fontSize:'1.2rem'}}
                                     onClick={(e)=>{e.preventDefault();this.setState({noSearching:true,collapsed:true})}}/>
-                            </div>
+                            </div> */}
                             <div className='my-5 hover-pointer'>
                                 <Icon type='user' className='text-white' style={{fontSize:'2rem'}}/>
                                 <div className='d-block text-white'>{this.user?this.user:'User'}</div>
@@ -80,30 +84,31 @@ class SideMenu extends React.Component{
                                 onClick={()=>this.setState({collapsed:false,noSearching:false})}/> : 
                             <Input.Search 
                                 placeholder='search' 
-                                className='px-2 mb-2'
+                                className='px-3 mb-2'
                                 allowClear
                                 onFocus={()=>noSearching && this.setState({noSearching:false})}
                                 onSearch={this.onSearchWord}
                                 onChange={(e)=>this.setState({searchWord:e.target.value})}/>}
                             {!collapsed && 
                             <Button 
-                                className='mx-2 mb-2' 
-                                type='primary' 
+                                className='mx-5 mb-2 mt-1' 
+                                id='translateButton'
+                                size='small'
                                 onClick={(e)=>{
                                     e.preventDefault()
                                     this.onSearchWord()
                                 }}>在线翻译</Button>}
-                            {!collapsed && Object.keys(translateResult).length && <div className={`text-white`}>    
+                            {!collapsed && Object.keys(translateResult).length>0 && <div className={`text-white`}>    
                                 <OnlineTranslation translateResult={translateResult}/>
-                            </div>}
+                            </div>}   
                         </div>
+                        <div className='text-white d-flex mx-auto justify-content-center position-fixed' id='loginOrLogoutButton'
+                            style={{bottom:'3rem',width:collapsed?70:230,cursor:'pointer',lineHeight:3}}
+                            onClick={this.signInOrOut}>
+                            {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}&nbsp;<Icon type={this.user?'logout':'login'} style={{width:'1.5rem'}}/></span>}
+                        </div> 
                     </Sider>  
-                    <div className='text-white d-flex mx-auto justify-content-center' 
-                        style={{position:'absolute',bottom:'3.5rem',width:!collapsed?'200px':'80px',cursor:'pointer'}}
-                        onClick={this.signInOrOut}>
-                        {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}</span>}<embed src={this.user?signout:signin} style={{width:'1.5rem'}}/>  
-                    </div>    
-            </div>
+            // </div>
         )
     }
 }

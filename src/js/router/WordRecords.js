@@ -467,36 +467,36 @@ export default class WordRecord extends React.Component {
         },{}) 
         return (
             <Layout className='route-min-height'>
-                <SideMenu history={this.props.history}/>
+                <SideMenu history={this.props.history} />
                 <Layout>
-                    <div className='mx-xl-5 mx-md-3 mx-1 mt-5'>
+                    <div className='page-max-width mx-md-3 mx-1 mt-5 mx-xl-auto'>
                         <div className='position-relative mt-3'>
                             <div className='d-flex justify-content-between mb-3'>
-                                <TableFilter style={{zIndex:'100'}} {...{wordClassifications}} />                  
-                                <div className='d-flex float-right ' style={{zIndex:'100'}}>
+                                <TableFilter style={{ zIndex: '100' }} {...{ wordClassifications }} />
+                                <div className='d-flex float-right ' style={{ zIndex: '100' }}>
                                     <div className='mr-2'>
                                         <Input.Search placeholder='输入单词/中文翻译'
-                                            onChange={value=>!value && this.setState({searchResult:[]})} 
-                                            style={{minWidth:'14rem'}}
+                                            onChange={value => !value && this.setState({ searchResult: [] })}
+                                            style={{ minWidth: '14rem' }}
                                             enterButton='搜索'
-                                            allowClear 
-                                            onSearch={this.searchWordByTypeWordOrTransfer}/>
+                                            allowClear
+                                            onSearch={this.searchWordByTypeWordOrTransfer} />
                                     </div>
-                                    <Button type="danger" ghost onClick={()=>this.deleteWordBySelect()}>批量删除</Button>
+                                    <Button type="danger" ghost onClick={() => this.deleteWordBySelect()}>批量删除</Button>
                                 </div>
                             </div>
-                            <div className='position-absolute w-100 text-center' style={{top:'0px'}}>
+                            <div className='position-absolute w-100 text-center' style={{ top: '0px' }}>
                                 <div className=' d-inline-block position-relative'  >
-                                    <Button type="primary" onClick={()=>this.WrappedAddWordFormModal.modalVisible()}>添加单词</Button>
-                                    <WrappedAddWordFormModal ref={ele=>this.WrappedAddWordFormModal = ele}/>
+                                    <Button type="primary" onClick={() => this.WrappedAddWordFormModal.modalVisible()}>添加单词</Button>
+                                    <WrappedAddWordFormModal ref={ele => this.WrappedAddWordFormModal = ele} />
                                 </div>
                             </div>
                         </div>
-                        <WordTable  
-                            words={searchResult.length?searchResult:words} 
-                            ref={(WordTableElement)=>this.WordTableElement=WordTableElement} 
+                        <WordTable
+                            words={searchResult.length ? searchResult : words}
+                            ref={(WordTableElement) => this.WordTableElement = WordTableElement}
                             deleteWordByOperation={this.deleteWordByOperation}
-                            setWord={this.setWord}/>
+                            setWord={this.setWord} />
                     </div>
                 </Layout>
             </Layout>
