@@ -9,6 +9,7 @@ import eventProxy from '../utils/event-proxy';
 import SideMenu from '../component/SideMenu';
 import WrappedAddWordFormModal from '../component/AddWordForm';
 import ClassificationsSelect from '../component/ClassificationsSelect';
+import {cloneDeep} from 'lodash';
 
 class WordTable extends React.Component {
 
@@ -27,6 +28,22 @@ class WordTable extends React.Component {
                 })
             }
         }
+        this.timeId = setInterval(() => {
+            if(Object.keys(this.changeStarNum).length){
+                let cloneChangeStarNum = cloneDeep(this.changeStarNum)
+                $.ajax({
+                    method:'POST',
+                    url:'api/wordRecords/setStars',
+                    data:{changeStarNum:JSON.stringify(cloneChangeStarNum)}
+                }).then(()=>{
+                    for(const delKey in cloneChangeStarNum){
+                        if(this.changeStarNum[delKey] === cloneChangeStarNum[delKey])
+                            delete this.changeStarNum[delKey]
+                    }
+                    cloneChangeStarNum = null;
+                })
+            }
+        }, (1000*60*20));
     }
 
     state = {
@@ -218,7 +235,7 @@ class WordTable extends React.Component {
             }
         })
     }
-    changeStarNum={}
+    changeStarNum={}//单词星星数量变化，就存储
 
     buildTable(){
         const {wordsType, isTotalTransVisible, selectedRowKeys, isTotalWordVisible} = this.state
@@ -241,7 +258,7 @@ class WordTable extends React.Component {
             {
                 title:'熟练度',
                 dataIndex: 'starsNum',
-                render: (value, row, index) => <Rate defaultValue={value} onChange={(starNums)=>{this.changeStarNum[row.word] = starNums}} allowClear={true} />,
+                render: (value, row) => <Rate defaultValue={value} onChange={(starNums)=>{this.changeStarNum[row.word] = starNums}} allowClear={true} />,
                 sorter: (a, b) => {
                     const aNum = this.changeStarNum[a.word]?this.changeStarNum[a.word]:a.starsNum
                     const bNum = this.changeStarNum[b.word]?this.changeStarNum[b.word]:b.starsNum
@@ -335,6 +352,9 @@ class WordTable extends React.Component {
                 {this.buildTable()}
             </div>
         )
+    }
+    componentWillUnmount(){
+        clearInterval(this.timeId)
     }
 }
 
