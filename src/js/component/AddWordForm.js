@@ -31,7 +31,7 @@ class VerticalAddWordForm extends React.Component {
             if (!err) {
                 console.log('Received values of form: ', values);
                 const data = {
-                    word:values.wordName,
+                    word:values.word,
                     translate:values.translate,
                     phonetic:values.phonetic,
                     classifications:this.ClassificationsSelect.getSpecifiedClassifications()
@@ -40,7 +40,7 @@ class VerticalAddWordForm extends React.Component {
                 this.context.onSetWord(data)
                     .then((data)=>{
                         // console.log(data)
-                        setFieldsValue({'wordName':'','translate':'','phonetic':''})
+                        setFieldsValue({'word':'','translate':'','phonetic':''})
                         message.success('添加成功')
                         this.props.modalInvisible()
                     })
@@ -54,7 +54,7 @@ class VerticalAddWordForm extends React.Component {
         } = this.props.form;
 
         // Only show error after a field is touched.
-        const wordNameError = isFieldTouched('wordName') && getFieldError('wordName');
+        const wordError = isFieldTouched('word') && getFieldError('word');
         const translateError = isFieldTouched('translate') && getFieldError('translate');
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -62,10 +62,10 @@ class VerticalAddWordForm extends React.Component {
                     className='d-flex justify-content-center'
                     label='单词'
                     {...formItemLayout}
-                    validateStatus={wordNameError ? 'error' : ''}
-                    help={wordNameError || ''}
+                    validateStatus={wordError ? 'error' : ''}
+                    help={wordError || ''}
                 >
-                    {getFieldDecorator('wordName', {
+                    {getFieldDecorator('word', {
                         rules: [{ required: true, message: '请输入单词！' }],
                     })(
                         // <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
@@ -76,8 +76,8 @@ class VerticalAddWordForm extends React.Component {
                     className='d-flex justify-content-center'
                     label='发音'
                     {...formItemLayout}
-                    validateStatus={wordNameError ? 'error' : ''}
-                    help={wordNameError || ''}
+                    validateStatus={wordError ? 'error' : ''}
+                    help={wordError || ''}
                 >
                     {getFieldDecorator('phonetic', {
                         rules: [{ required: false}],
@@ -95,8 +95,7 @@ class VerticalAddWordForm extends React.Component {
                     {getFieldDecorator('translate', {
                         rules: [{ required: true, message: '请输入翻译！' }],
                     })(
-                        // <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
-                        <Input AUTOCOMPLETE="off"/>
+                        <Input.TextArea autosize={{minRows:1, maxRows:6}} AUTOCOMPLETE="off"/>
                     )}
                 </Form.Item>
                 <Form.Item
@@ -129,20 +128,34 @@ class VerticalAddWordForm extends React.Component {
     }
 }
 
-const WrappedAddWordForm = Form.create({ name: 'vertical_login' })(VerticalAddWordForm);
+const WrappedAddWordForm = Form.create({ 
+    name: 'vertical_login',
+    mapPropsToFields(props){
+        if(!props.initialValue)return {}
+        return {
+            word:Form.createFormField({value:props.initialValue.word}),
+            phonetic:Form.createFormField({value:props.initialValue.phonetic}),
+            translate:Form.createFormField({value:props.initialValue.translate}),
+            classifications:Form.createFormField({value:props.initialValue.classifications}),
+        }
+    } 
+})(VerticalAddWordForm);
 
 export default class WrappedAddWordFormModal extends React.Component{
     state={
         addWordModalVisible:false
     }
     modalInvisible=()=>{
-        this.setState({addWordModalVisible:false})
+        this.setState({addWordModalVisible:false,initialValue:''})
     }
     modalVisible=()=>{
         this.setState({addWordModalVisible:true})
     }
+    addDataAndModalVisible = (data)=>{
+        this.setState({initialValue:data,addWordModalVisible:true})
+    }
     render() {
-        const {addWordModalVisible} = this.state
+        const {addWordModalVisible, initialValue} = this.state
         return (
             <Modal
                 width={'25rem'}
@@ -151,7 +164,7 @@ export default class WrappedAddWordFormModal extends React.Component{
                 footer={null}
                 onCancel={this.modalInvisible}
             >
-                <WrappedAddWordForm modalInvisible={this.modalInvisible}/>
+                <WrappedAddWordForm modalInvisible={this.modalInvisible} initialValue ={initialValue}/>
             </Modal>
         )
     }

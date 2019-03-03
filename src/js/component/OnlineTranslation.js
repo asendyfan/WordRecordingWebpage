@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
+import WrappedAddWordFormModal from './AddWordForm';
 export default class OnlineTranslation extends React.Component {
     static contextTypes = {
         onSetWord: PropTypes.func,
@@ -28,8 +29,9 @@ export default class OnlineTranslation extends React.Component {
                             translate:translateResult.explains.length?translateResult.explains.join('\n'):translateResult.translations[0],
                             classifications:'',
                         }
-                        this.context.onSetWord(data)
+                        this.WrappedAddWordFormModal.addDataAndModalVisible(data)
                     }} >添加到单词表</Button>
+                    <WrappedAddWordFormModal ref={ele => this.WrappedAddWordFormModal = ele} />
                 </div>
             </div>)
     }
