@@ -250,10 +250,7 @@ class WordTable extends React.Component {
                 sorter: (a, b) => a.word.toLowerCase() > b.word.toLowerCase() ? 1 : -1,
                 ...this.getColumnSearchProps('word'),
                 align: 'center', 
-                render:(text, record)=>this.isEditing(record)?<Input style={{width:'9rem'}} defaultValue={text} ref={(ele)=>this.editWordElement=ele}/>:text,
-                onCell:(record, rowIndex)=>({
-                    record,
-                })
+                render:(text, record)=>this.isEditing(record)?<Input style={{width:'9rem'}} defaultValue={text} ref={(ele)=>this.editWordElement=ele}/>:<div className='font-weight-bold font-italic' style={{size:'1.2rem'}}>{text}</div>,
             },
             {
                 title:'熟练度',

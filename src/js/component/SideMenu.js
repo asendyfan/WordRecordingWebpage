@@ -14,7 +14,8 @@ class SideMenu extends React.Component{
         collapsed:false,
         noSearching:true,
         translateResult:{},
-        searchWord:''
+        searchWord:'',
+        searchNoResultWarning:false,
     }
     user = getCookie('user')
 
@@ -46,69 +47,63 @@ class SideMenu extends React.Component{
     onSearchWord= async ()=>{
         const {searchWord} = this.state
         let translateResult = await getTranslateResultThroughWord(searchWord)
+        console.log('translate result',translateResult)
+        // if(!translateResult)return this.setState({searchNoResultWarning:true,translateResult:{}})
         if(!translateResult)return 
         translateResult.word = searchWord.trim()
-        translateResult && this.setState({translateResult})
+        translateResult && this.setState({translateResult,searchNoResultWarning:false})
     }
 
     render(){
-        const {collapsed,noSearching, translateResult, searchWord} = this.state;
+        const {collapsed,noSearching, translateResult, searchNoResultWarning} = this.state;
         return (
-            // <div onMouseOver={this.onpenSideMenu} className='float-left ' style={{backgroundColor:'#003366'}} >
-                    <Sider
-                        width = {230}
-                        collapsedWidth={70}
-                        style={{backgroundColor:'#003366'}}
-                        collapsed={collapsed}
-                        onCollapse={this.onCollapse}
-                        className='route-min-height'
-                        // onMouseOver={this.onpenSideMenu}
-                        // onMouseLeave={()=>noSearching && this.setState({collapsed:true})}
-                    >
-                        <div className='d-flex  text-center justify-content-center  flex-column position-fixed' style={{width:collapsed?70:230}} id='sideContent'>
-                            {/* <div className={`text-white hover-pointer ${collapsed?'invisible':'visible'}`}>
-                                <Icon 
-                                    className='mr-1 mt-2'
-                                    type="shrink" 
-                                    style={{float:'right', fontSize:'1.2rem'}}
-                                    onClick={(e)=>{e.preventDefault();this.setState({noSearching:true,collapsed:true})}}/>
-                            </div> */}
-                            <div className='my-5 hover-pointer'>
-                                <Icon type='user' className='text-white' style={{fontSize:'2rem'}}/>
-                                <div className='d-block text-white'>{this.user?this.user:'User'}</div>
-                            </div>
-                            {collapsed ? 
-                            <Icon 
-                                type='search' 
-                                className='text-white icon-half-larger hover-pointer' 
-                                onClick={()=>this.setState({collapsed:false,noSearching:false})}/> : 
-                            <Input.Search 
-                                placeholder='search' 
-                                className='px-3 mb-2'
-                                allowClear
-                                onFocus={()=>noSearching && this.setState({noSearching:false})}
-                                onSearch={this.onSearchWord}
-                                onChange={(e)=>this.setState({searchWord:e.target.value})}/>}
-                            {!collapsed && 
-                            <Button 
-                                className='mx-5 mb-2 mt-1' 
-                                id='translateButton'
-                                size='small'
-                                onClick={(e)=>{
-                                    e.preventDefault()
-                                    this.onSearchWord()
-                                }}>在线翻译</Button>}
-                            {!collapsed && Object.keys(translateResult).length>0 && <div className={`text-white`}>    
-                                <OnlineTranslation translateResult={translateResult}/>
-                            </div>}   
+                <Sider
+                    width = {230}
+                    collapsedWidth={70}
+                    style={{backgroundColor:'#003366'}}
+                    collapsed={collapsed}
+                    onCollapse={this.onCollapse}
+                    className='route-min-height'
+                >
+                    <div className='d-flex  text-center justify-content-center  flex-column position-fixed' style={{width:collapsed?70:230}} id='sideContent'>
+                        <div className='my-5 hover-pointer'>
+                            <Icon type='user' className='text-white' style={{fontSize:'2rem'}}/>
+                            <div className='d-block text-white'>{this.user?this.user:'User'}</div>
                         </div>
-                        <div className='text-white d-flex mx-auto justify-content-center position-fixed' id='loginOrLogoutButton'
-                            style={{bottom:'3rem',width:collapsed?70:230,cursor:'pointer',lineHeight:3}}
-                            onClick={this.signInOrOut}>
-                            {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}&nbsp;<Icon type={this.user?'logout':'login'} style={{width:'1.5rem'}}/></span>}
-                        </div> 
-                    </Sider>  
-            // </div>
+                        {collapsed ? 
+                        <Icon 
+                            type='search' 
+                            className='text-white icon-half-larger hover-pointer' 
+                            onClick={()=>this.setState({collapsed:false,noSearching:false})}/> : 
+                        <Input.Search 
+                            placeholder='search' 
+                            className='px-3 mb-2'
+                            allowClear
+                            onFocus={()=>noSearching && this.setState({noSearching:false})}
+                            onSearch={this.onSearchWord}
+                            onChange={(e)=>this.setState({searchWord:e.target.value})}/>}
+                        {!collapsed && 
+                        <Button 
+                            className='mx-5 mb-2 mt-1' 
+                            id='translateButton'
+                            size='small'
+                            onClick={(e)=>{
+                                e.preventDefault()
+                                this.onSearchWord()
+                            }}>在线翻译</Button>}
+                        {!collapsed && Object.keys(translateResult).length>0 && <div className={`text-white`}>    
+                            <OnlineTranslation translateResult={translateResult}/>
+                        </div>} 
+                        {/* {!collapsed && searchNoResultWarning &&<div className='text-white mt-3'>
+                            搜索不到该单词
+                        </div>}   */}
+                    </div>
+                    <div className='text-white d-flex mx-auto justify-content-center position-fixed' id='loginOrLogoutButton'
+                        style={{bottom:'3rem',width:collapsed?70:230,cursor:'pointer',lineHeight:3}}
+                        onClick={this.signInOrOut}>
+                        {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}&nbsp;<Icon type={this.user?'logout':'login'} style={{width:'1.5rem'}}/></span>}
+                    </div> 
+                </Sider>  
         )
     }
 }
