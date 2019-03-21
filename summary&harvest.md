@@ -33,6 +33,8 @@
 - dom
     1. 阻止事件的冒泡或捕获：`event.stopPropagation(); `
     1. 阻止该事件以外的其它所有事件（比如捕获、冒泡，以及监听该dom的其他事件：`event.stopImmediatePropagation();`
+- 正则
+    1.  换行符：\n
 
 
 ### 标签上 ###

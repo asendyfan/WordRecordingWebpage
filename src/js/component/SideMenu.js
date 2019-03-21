@@ -2,8 +2,6 @@ import React from 'react';
 import {Layout, Icon, Input, Button, Modal} from 'antd';
 import $ from 'jquery'
 import {getCookie} from '../utils/get-cookie'
-import signout from '../../pic/signout.svg';
-import signin from '../../pic/signin.svg';
 import OnlineTranslation from './OnlineTranslation';
 import getTranslateResultThroughWord from './getTranslateResultThroughWord';
 
