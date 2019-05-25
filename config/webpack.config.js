@@ -235,10 +235,10 @@ module.exports = function(webpackEnv) {
       // Automatically split vendor and commons
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-      splitChunks: {
-        chunks: 'all',
-        name: false,
-      },
+      // splitChunks: {
+      //   chunks: 'all',
+      //   name: false,
+      // },
       // splitChunks: {
       //   chunks: 'all', // 默认 async 可选值 all 和 initial            
       //   maxInitialRequests: Infinity, // 一个入口最大的并行请求数            
@@ -254,6 +254,27 @@ module.exports = function(webpackEnv) {
       //     }
       //   }
       // },
+      splitChunks: {
+        chunks: 'all',//默认只作用于异步模块，为`all`时对所有模块生效,`initial`对同步模块有效
+        minSize: 30000,//合并前模块文件的体积
+        minChunks: 1,//最少被引用次数
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '~',//自动命名连接符
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            minChunks: 1,//敲黑板
+            priority: -10//优先级更高
+          },
+          default: {
+            test: /[\\/]src[\\/]js[\\/]/,
+            minChunks: 2,//一般为非第三方公共模块
+            priority: -20,
+            reuseExistingChunk: true
+          }
+        }
+      },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
       runtimeChunk: true,
