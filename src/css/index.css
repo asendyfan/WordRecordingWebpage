@@ -19,6 +19,24 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.text-white{
+  color:white;
+}
+.float-left{
+  float:left;
+}
+.d-block{
+  display:block;
+}
+.d-flex{
+  display: flex;
+}
+.justify-content-center{
+  justify-content: center!important;
+}
+.pl-5{
+  padding-left: 3rem;
+}
 
 .hover-pointer:hover{
   cursor: pointer;

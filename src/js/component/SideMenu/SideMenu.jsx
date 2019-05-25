@@ -2,7 +2,7 @@ import React from 'react';
 import {Layout, Icon, Input, Button, Modal} from 'antd';
 import $ from 'jquery'
 import {getCookie} from '../../utils/get-cookie'
-import OnlineTranslation from '../OnlineTranslation';
+import OnlineTranslation from '../OnlineTranslation/OnlineTranslation';
 import getTranslateResultThroughWord from '../getTranslateResultThroughWord';
 import styles from './index.module.scss';
 
