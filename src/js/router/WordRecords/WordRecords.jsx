@@ -2,14 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 import { Table, Button, Icon, Input, Rate, DatePicker, Layout, message, Modal, Popconfirm, Dropdown, Menu, Select, Tooltip, List, Form } from 'antd';
-import {getCookie} from '../utils/get-cookie'
+import {getCookie} from '../../utils/get-cookie'
 import Highlighter from 'react-highlight-words';
-import TableFilter from '../component/TableFilter';
-import eventProxy from '../utils/event-proxy';
-import SideMenu from '../component/SideMenu';
-import WrappedAddWordFormModal from '../component/AddWordForm';
-import ClassificationsSelect from '../component/ClassificationsSelect';
+import TableFilter from '../../component/TableFilter';
+import eventProxy from '../../utils/event-proxy';
+import SideMenu from '../../component/SideMenu';
+import WrappedAddWordFormModal from '../../component/AddWordForm';
+import ClassificationsSelect from '../../component/ClassificationsSelect';
 import {cloneDeep} from 'lodash';
+import styles from './index.module.scss'
 
 class WordTable extends React.Component {
 
@@ -214,7 +215,7 @@ class WordTable extends React.Component {
                     <div>
                         {editable?(
                             <span>
-                                <a className='text-primary mr-2' href='javascript:;' onClick={()=>{
+                                <a className={styles.savingButton} href='javascript:;' onClick={()=>{
                                     this.save({
                                         word:this.editWordElement.state.value.trim(),
                                         phonetic:this.editPhoneticElement.state.value.trim(),
@@ -486,12 +487,12 @@ export default class WordRecord extends React.Component {
             <Layout className='route-min-height'>
                 <SideMenu history={this.props.history} />
                 <Layout>
-                    <div className='page-max-width mx-md-3 mx-1 mt-5 mx-xl-auto'>
-                        <div className='position-relative mt-3'>
-                            <div className='d-flex justify-content-between mb-3'>
+                    <div className={`page-max-width ${styles.main}`}>
+                        <div className={styles.toolBar}>
+                            <div className={styles.toolBarWrapper}>
                                 <TableFilter style={{ zIndex: '100' }} {...{ wordClassifications }} />
-                                <div className='d-flex float-right ' style={{ zIndex: '100' }}>
-                                    <div className='mr-2'>
+                                <div className={styles.toolBarRight} style={{ zIndex: '100' }}>
+                                    <div className={styles.search}>
                                         <Input.Search placeholder='输入单词/中文翻译'
                                             onChange={value => !value && this.setState({ searchResult: [] })}
                                             style={{ minWidth: '14rem' }}
@@ -502,8 +503,8 @@ export default class WordRecord extends React.Component {
                                     <Button type="danger" ghost onClick={() => this.deleteWordBySelect()}>批量删除</Button>
                                 </div>
                             </div>
-                            <div className='position-absolute w-100 text-center' style={{ top: '0px' }}>
-                                <div className=' d-inline-block position-relative'  >
+                            <div className={styles.toolBarCenter}>
+                                <div>
                                     <Button type="primary" onClick={() => this.WrappedAddWordFormModal.modalVisible()}>添加单词</Button>
                                     <WrappedAddWordFormModal ref={ele => this.WrappedAddWordFormModal = ele} />
                                 </div>

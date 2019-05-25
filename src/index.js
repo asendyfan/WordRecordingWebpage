@@ -6,11 +6,12 @@ import * as serviceWorker from './serviceWorker';
 
 import "antd/dist/antd.css";
 import 'antd/dist/antd.less';
+import './css/bootstrap.css'
 import './css/index.css';
 
 import asyncComponent from './js/utils/AsyncComponents'
 
-const AsyncWordRecords = asyncComponent(()=>import('./js/router/WordRecords'))
+const AsyncWordRecords = asyncComponent(()=>import('./js/router/WordRecords/index'))
 const AsyncSignIn = asyncComponent(()=>import('./js/router/SignIn'))
 const AsyncSignUp = asyncComponent(()=>import('./js/router/SignUp'))
 const AsyncForbidden = asyncComponent(()=>import('./js/router/Forbidden'))

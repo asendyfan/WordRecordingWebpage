@@ -37,6 +37,12 @@ code {
 .pl-5{
   padding-left: 3rem;
 }
+a.text-primary:focus, a.text-primary:hover {
+  color: #0056b3!important;
+}
+.text-primary {
+  color: #007bff!important;
+}
 
 .hover-pointer:hover{
   cursor: pointer;
