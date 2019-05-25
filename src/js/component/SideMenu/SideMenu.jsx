@@ -52,6 +52,10 @@ class SideMenu extends React.Component{
         translateResult.word = searchWord.trim()
         translateResult && this.setState({translateResult,searchNoResultWarning:false})
     }
+    
+    componentDidMount(){
+        // console.log(this.authBlock,document.getElementById('loginOrLogoutButton'))
+    }
 
     render(){
         const {collapsed,noSearching, translateResult, searchNoResultWarning} = this.state;
@@ -65,6 +69,17 @@ class SideMenu extends React.Component{
                     className='route-min-height'
                 >
                     <div className={`${styles.siderMain}`} style={{width:collapsed?70:230}} id='sideContent'>
+                        <div className={styles.authButton} id='loginOrLogoutButton'
+                            ref={node=>this.authBlock=node}
+                            style={{
+                                width:collapsed?70:230,
+                                // top:document.body.clientHeight*0.9 > 250 ? (document.body.clientHeight*0.9) : 250
+                            }}
+                            onClick={this.signInOrOut}>
+                            {!collapsed && <span className='align-self-center'>{this.user?'登出':'登录'}
+                            {/* <Icon type={this.user?'logout':'login'} style={{width:'1.5rem'}}/> */}
+                            </span>}
+                        </div> 
                         <div className={styles.iconWrapper}>
                             <Icon type='user' className={styles.icon} style={{fontSize:'2rem'}}/>
                             <div>{this.user?this.user:'User'}</div>
@@ -97,11 +112,7 @@ class SideMenu extends React.Component{
                             搜索不到该单词
                         </div>}   */}
                     </div>
-                    <div className={styles.authButton} id='loginOrLogoutButton'
-                        style={{width:collapsed?70:230}}
-                        onClick={this.signInOrOut}>
-                        {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}&nbsp;<Icon type={this.user?'logout':'login'} style={{width:'1.5rem'}}/></span>}
-                    </div> 
+
                 </Sider>  
         )
     }

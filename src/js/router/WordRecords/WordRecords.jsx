@@ -487,7 +487,7 @@ export default class WordRecord extends React.Component {
             <Layout className='route-min-height'>
                 <SideMenu history={this.props.history} />
                 <Layout>
-                    <div className={`page-max-width ${styles.main}`}>
+                    <div className={` ${styles.main}`}>
                         <div className={styles.toolBar}>
                             <div className={styles.toolBarWrapper}>
                                 <TableFilter style={{ zIndex: '100' }} {...{ wordClassifications }} />
