@@ -52,4 +52,16 @@
 1. input以及button通过样式名`d-inline-block`放在一行时，给input添加`.form-control`可以保持行高的一致
 1. 多个控件在一行，只指定某一个控件在中间的实现方式：
     + 父容器设定为相对定位，居中的控件包一个绝对定位，并设置`top:0px;z-index:100`，其他组件放后面
+1. 多出的内容省略掉，通过``...``替换
+    ```
+    .showEllipsis{
+        /* 保证文本内容不会自动换行，如果多余的内容会在水平方向撑破单元格。 */
+        white-space: nowrap;
+        /* 隐藏超出单元格的部分。 */
+        overflow: hidden; 
+        /* 将被隐藏的那部分用省略号代替。 */
+        text-overflow: ellipsis
+    }
+    ```
+    
 
