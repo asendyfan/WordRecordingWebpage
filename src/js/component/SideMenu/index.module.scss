@@ -1,0 +1,39 @@
+.siderMain{
+    display: flex!important;
+    text-align: center!important;
+    justify-content: center!important;
+    flex-direction: column!important;
+    position: fixed!important;
+}
+.iconWrapper{
+    margin-bottom: 3rem!important;
+    margin-top: 3rem!important;
+    cursor: pointer;
+    color: #fff!important;
+}
+.icon{
+    
+}
+.search{
+    padding-left: 1rem!important;
+    padding-right: 1rem;
+    margin-bottom: .5rem;
+}
+.button{
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: .5rem;
+    margin-top: .25rem;   
+}
+.authButton{
+    //  justify-content-center position-fixed
+    color:white;
+    display:flex;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    position: fixed;
+    cursor:pointer;
+    line-height:3;
+    bottom:3rem;
+}

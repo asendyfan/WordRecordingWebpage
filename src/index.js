@@ -3,13 +3,6 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import * as serviceWorker from './serviceWorker';
-// import SetWords from './js/router/WordRecord/SetWords';
-
-// import WordRecords from './js/router/WordRecords';
-// import SignIn from './js/router/SignIn';
-// import SignUp from './js/router/SignUp';
-// import Forbidden from './js/router/Forbidden';
-// import Setting from './js/router/Setting';
 
 import "antd/dist/antd.css";
 import 'antd/dist/antd.less';

@@ -1,9 +1,10 @@
 import React from 'react';
 import {Layout, Icon, Input, Button, Modal} from 'antd';
 import $ from 'jquery'
-import {getCookie} from '../utils/get-cookie'
-import OnlineTranslation from './OnlineTranslation';
-import getTranslateResultThroughWord from './getTranslateResultThroughWord';
+import {getCookie} from '../../utils/get-cookie'
+import OnlineTranslation from '../OnlineTranslation';
+import getTranslateResultThroughWord from '../getTranslateResultThroughWord';
+import styles from './index.module.scss';
 
 const {Sider} = Layout
 
@@ -63,26 +64,26 @@ class SideMenu extends React.Component{
                     onCollapse={this.onCollapse}
                     className='route-min-height'
                 >
-                    <div className='d-flex  text-center justify-content-center  flex-column position-fixed' style={{width:collapsed?70:230}} id='sideContent'>
-                        <div className='my-5 hover-pointer'>
-                            <Icon type='user' className='text-white' style={{fontSize:'2rem'}}/>
-                            <div className='d-block text-white'>{this.user?this.user:'User'}</div>
+                    <div className={`${styles.siderMain}`} style={{width:collapsed?70:230}} id='sideContent'>
+                        <div className={styles.iconWrapper}>
+                            <Icon type='user' className={styles.icon} style={{fontSize:'2rem'}}/>
+                            <div>{this.user?this.user:'User'}</div>
                         </div>
                         {collapsed ? 
                         <Icon 
                             type='search' 
-                            className='text-white icon-half-larger hover-pointer' 
+                            className='icon-half-larger hover-pointer' 
                             onClick={()=>this.setState({collapsed:false,noSearching:false})}/> : 
                         <Input.Search 
                             placeholder='search' 
-                            className='px-3 mb-2'
+                            className={styles.search}
                             allowClear
                             onFocus={()=>noSearching && this.setState({noSearching:false})}
                             onSearch={this.onSearchWord}
                             onChange={(e)=>this.setState({searchWord:e.target.value})}/>}
                         {!collapsed && 
                         <Button 
-                            className='mx-5 mb-2 mt-1' 
+                            className={styles.button} 
                             id='translateButton'
                             size='small'
                             onClick={(e)=>{
@@ -96,8 +97,8 @@ class SideMenu extends React.Component{
                             搜索不到该单词
                         </div>}   */}
                     </div>
-                    <div className='text-white d-flex mx-auto justify-content-center position-fixed' id='loginOrLogoutButton'
-                        style={{bottom:'3rem',width:collapsed?70:230,cursor:'pointer',lineHeight:3}}
+                    <div className={styles.authButton} id='loginOrLogoutButton'
+                        style={{width:collapsed?70:230}}
                         onClick={this.signInOrOut}>
                         {!collapsed && <span className='align-self-center mr-1'>{this.user?'登出':'登录'}&nbsp;<Icon type={this.user?'logout':'login'} style={{width:'1.5rem'}}/></span>}
                     </div> 
