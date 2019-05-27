@@ -49,7 +49,7 @@
             var reg2 = /,(?=\w+)/g
             while (str.match(reg3) || str.match(reg2)) {
                 str = str.replace(reg3, '')
-                    .replace(reg2, ';\n')
+                    .replace(reg2, ';\n'+'\xa0\xa0')
             }
             var reg5 = /};/g
             str = str.replace(reg5, '}\n')
@@ -60,16 +60,16 @@
             return str
         }
         function clickButton(node){
-            console.log(33)
-            console.log(document.getElementById('textAreas').value)
             var cssObject = document.getElementById('textAreas').value
                 .replace(/(\w+)(?=\s*:\s*)/g,'"$1"')
                 .replace(/'/g,"\"")
             console.log(cssObject)
             try{
                 cssObject = JSON.parse(cssObject)
-                do changeForCss(cssObject)
-            }catch{
+                console.log(cssObject)
+                document.getElementById('codeNode').innerText = changeForCss(cssObject)
+            }catch(err){
+                console.error(err)
                 alert('格式不对，请复制正确的样式对象或者json字符串')
             }
         }
