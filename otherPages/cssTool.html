@@ -10,8 +10,14 @@
             margin:0px;
             padding: 0px;
         }
+        html{
+            display: flex;
+            justify-content: center;
+            width:100%;
+        }
         body{
             min-width: 800px;
+            width:100%;
             max-width: 1200px;
         }
         .container{
@@ -25,10 +31,17 @@
         }
         .container>textarea{
             font-size: 1rem;
-            width:30%;
+            width:33%;
+            overflow: scroll;
+        }
+        .container>textarea::placeholder{
+            color:#aaa;
         }
         .container>code{
-            width:30%;
+            width:33%;
+            background-color:#1e1e1e;
+            color:white;
+            padding:.5rem;
         }
         .button-wrapper{
             display: flex;
@@ -42,21 +55,44 @@
 </head>
 <body>
     <script>
+        const cssObject = {
+            container:{
+                backgroundColor:'black',
+                color:'blue',
+                width:'100px',
+                height:'100%',
+                marginLeft:'2rem',
+                border:'1px solid rgba(2,2,2,1)'
+            },
+            footer:{
+                backgroundColor:'black',
+                color:'blue',
+                width:'100px',
+                height:'100%',
+                marginLeft:'2rem',
+                border:'1px solid rgba(2,2,2,1)'
+            }
+        }
         function changeForCss(definedStyle) {
             var str = JSON.stringify(definedStyle)
             str = str.replace(/^{|}$/g, '')
-            var reg3 = /'|"/g
-            var reg2 = /,(?=\w+)/g
-            while (str.match(reg3) || str.match(reg2)) {
-                str = str.replace(reg3, '')
-                    .replace(reg2, ';\n'+'\xa0\xa0')
-            }
-            var reg5 = /};/g
-            str = str.replace(reg5, '}\n')
-            var reg4 = /(\w+)(?=:{)/g
-            str = str.replace(reg4, '.$1')
-            var reg1 = /([A-Z])(?!\w+:{)/g
-            str = str.replace(reg1, function (match) { return '-' + match.toLowerCase() })
+            var reg1 = /'|"/g,
+                reg2 = /(?<!}),(?=[a-zA-Z-]+)/g,
+                reg3 = /(?<=}),/g,
+                reg4 = /};/g,
+                reg5 = /(\w+):(?={)/g,
+                reg6 = /([A-Z])(?![\w-]*(:{|;))/g,
+                reg7 = /({)/g
+                reg8 = /(})/g
+            str = str.replace(reg1, '')
+                .replace(reg2, ';\n\xa0\xa0')
+                .replace(reg3,'\n')
+                .replace(reg4, '}\n')
+                .replace(reg5, '.$1')
+                .replace(reg6, function (match) { return '-' + match.toLowerCase() })
+                .replace(reg7, '$1\n\xa0\xa0')
+                .replace(reg8, ';\n$1')
+            console.log(str)
             return str
         }
         function clickButton(node){
@@ -70,16 +106,51 @@
                 document.getElementById('codeNode').innerText = changeForCss(cssObject)
             }catch(err){
                 console.error(err)
-                alert('格式不对，请复制正确的样式对象或者json字符串')
+                alert('格式不对，请复制正确的样式对象或者该对象的json字符串')
             }
         }
     </script>
     <div class="container">
-        <textarea rows=20 placeholder="填入样式对象" id="textAreas"></textarea>
+        <textarea rows=20 placeholder="粘贴如样式对象或者该对象的json字符串，比如
+{
+    container:{
+        backgroundColor:'black',
+        color:'blue',
+        width:'100px',
+        height:'100%',
+        marginLeft:'2rem',
+        border:'1px solid rgba(2,2,2,1)'
+    },
+    footer:{
+        backgroundColor:'black',
+        color:'blue',
+        width:'100px',
+        height:'100%',
+        marginLeft:'2rem',
+        border:'1px solid rgba(2,2,2,1)'
+    }
+}" id="textAreas" wrap="off"></textarea>
         <div class="button-wrapper">
             <button onclick="clickButton()">转换格式</button>
         </div>
-        <code id="codeNode">dfgdfgd</code>
+        <code id="codeNode">
+        .container{
+        <br/>&nbsp;&nbsp;background-color:black;
+        <br/>&nbsp;&nbsp;color:blue;
+        <br/>&nbsp;&nbsp;width:100px;
+        <br/>&nbsp;&nbsp;height:100%;
+        <br/>&nbsp;&nbsp;margin-left:2rem;
+        <br/>&nbsp;&nbsp;border:1px solid rgba(2,2,2,1);
+        <br/>}
+        <br/>.footer{
+        <br/>&nbsp;&nbsp;background-color:black;
+        <br/>&nbsp;&nbsp;color:blue;
+        <br/>&nbsp;&nbsp;width:100px;
+        <br/>&nbsp;&nbsp;height:100%;
+        <br/>&nbsp;&nbsp;margin-left:2rem;
+        <br/>&nbsp;&nbsp;border:1px solid rgba(2,2,2,1);
+        <br/>}
+        </code>
     </div>
 </body>
 </html>
