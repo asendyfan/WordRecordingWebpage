@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        html,body{
+            margin:0px;
+            padding: 0px;
+        }
+        body{
+            min-width: 800px;
+            max-width: 1200px;
+        }
+        .container{
+            width: 100%;
+            padding-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            font-size: 16px;
+        }
+        .container>textarea{
+            font-size: 1rem;
+            width:30%;
+        }
+        .container>code{
+            width:30%;
+        }
+        .button-wrapper{
+            display: flex;
+            align-items: center;
+            margin: 0px 1rem;
+        }
+        .button-wrapper>button{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function changeForCss(definedStyle) {
+            var str = JSON.stringify(definedStyle)
+            str = str.replace(/^{|}$/g, '')
+            var reg3 = /'|"/g
+            var reg2 = /,(?=\w+)/g
+            while (str.match(reg3) || str.match(reg2)) {
+                str = str.replace(reg3, '')
+                    .replace(reg2, ';\n')
+            }
+            var reg5 = /};/g
+            str = str.replace(reg5, '}\n')
+            var reg4 = /(\w+)(?=:{)/g
+            str = str.replace(reg4, '.$1')
+            var reg1 = /([A-Z])(?!\w+:{)/g
+            str = str.replace(reg1, function (match) { return '-' + match.toLowerCase() })
+            return str
+        }
+        function clickButton(node){
+            console.log(33)
+            console.log(document.getElementById('textAreas').value)
+            var cssObject = document.getElementById('textAreas').value
+                .replace(/(\w+)(?=\s*:\s*)/g,'"$1"')
+                .replace(/'/g,"\"")
+            console.log(cssObject)
+            try{
+                cssObject = JSON.parse(cssObject)
+                do changeForCss(cssObject)
+            }catch{
+                alert('格式不对，请复制正确的样式对象或者json字符串')
+            }
+        }
+    </script>
+    <div class="container">
+        <textarea rows=20 placeholder="填入样式对象" id="textAreas"></textarea>
+        <div class="button-wrapper">
+            <button onclick="clickButton()">转换格式</button>
+        </div>
+        <code id="codeNode">dfgdfgd</code>
+    </div>
+</body>
+</html>
